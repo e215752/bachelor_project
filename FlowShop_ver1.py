@@ -209,10 +209,11 @@ H_waitingTime = 0.0
 
 for j in range(len(job)):
     for i in range(len(job[j])-1):
+        #後のタスク
         lb1 = range_trantision_ptime['t'+str(j+1)+str(i+2)][0]
         ub1 = range_trantision_ptime['t'+str(j+1)+str(i+2)][1]
         t1 = transition_num['t'+str(j+1)+str(i+2)]
-        
+        #前のタスク
         lb2 = range_trantision_ptime['t'+str(j+1)+str(i+1)][0]
         ub2 = range_trantision_ptime['t'+str(j+1)+str(i+1)][1]
         t2 = transition_num['t'+str(j+1)+str(i+1)]
@@ -223,12 +224,8 @@ for j in range(len(job)):
                     for r2 in resource_m['R'+str(i)]:
                         fd = k2 + machine_processing_time[r2]
                         r_num2 = resource_num[r2]
-                        if r_num1 - fd >= 0:
-<<<<<<< HEAD
+                        if k1 - fd >= 0:
                             H_waitingTime += k1 * x[k1,t1,r_num1]**2 * x[k2,t2,r_num2] - fd * x[k2,t2,r_num2]**2 * x[k1,t1,r_num1]
-=======
-                            H_waitingTime += r_num1*x[k1,t1,r_num1] - fd*x[k2,t2,r_num2]
->>>>>>> origin/main
 
 from collections import OrderedDict
 
