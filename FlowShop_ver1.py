@@ -225,7 +225,7 @@ for j in range(len(job)):
                         fd = k2 + machine_processing_time[r2]
                         r_num2 = resource_num[r2]
                         if k1 - fd >= 0:
-                            H_waitingTime += k1 * x[k1,t1,r_num1]**2 * x[k2,t2,r_num2] - fd * x[k2,t2,r_num2]**2 * x[k1,t1,r_num1]
+                            H_waitingTime += k1 * x[k1,t1,r_num1] * x[k2,t2,r_num2] - fd * x[k2,t2,r_num2] * x[k1,t1,r_num1]
 
 from collections import OrderedDict
 
