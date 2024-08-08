@@ -224,7 +224,11 @@ for j in range(len(job)):
                         fd = k2 + machine_processing_time[r2]
                         r_num2 = resource_num[r2]
                         if r_num1 - fd >= 0:
+<<<<<<< HEAD
                             H_waitingTime += k1 * x[k1,t1,r_num1]**2 * x[k2,t2,r_num2] - fd * x[k2,t2,r_num2]**2 * x[k1,t1,r_num1]
+=======
+                            H_waitingTime += r_num1*x[k1,t1,r_num1] - fd*x[k2,t2,r_num2]
+>>>>>>> origin/main
 
 from collections import OrderedDict
 
