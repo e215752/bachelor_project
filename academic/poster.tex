@@ -7,6 +7,7 @@
 \usepackage{amsmath,amssymb,amsfonts}
 \usepackage{algorithmic}
 \usepackage[dvipdfmx]{graphicx}
+\usepackage{svg}
 \usepackage{textcomp}
 \usepackage{xcolor}
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
@@ -15,17 +16,17 @@
 
 \title{量子最適化}
 
-\author{\IEEEauthorblockN{1\textsuperscript{st} Given Name Surname}
-\IEEEauthorblockA{\textit{dept. name of organization (of Aff.)} \\
-\textit{name of organization (of Aff.)}\\
-City, Country \\
-email address or ORCID}
+\author{\IEEEauthorblockN{1\textsuperscript{st} Ryota Uechi}
+\IEEEauthorblockA{\textit{Computer Sciences and Intelligent Systems, Faculty of Eng.,} \\
+\textit{University of the Ryukyus}\\
+Okinawa, Japan \\
+e215752@ie.u-ryukyu.ac.jp}
 \and
-\IEEEauthorblockN{2\textsuperscript{nd} Given Name Surname}
-\IEEEauthorblockA{\textit{dept. name of organization (of Aff.)} \\
-\textit{name of organization (of Aff.)}\\
-City, Country \\
-email address or ORCID}
+\IEEEauthorblockN{2\textsuperscript{nd} Morikazu Nakamura}
+\IEEEauthorblockA{\textit{Computer Sciences and Intelligent Systems, Faculty of Eng.,} \\
+\textit{University of the Ryukyus}\\
+Okinawa, Japan \\
+morikazu@ie.u-ryukyu.ac.jp}
 \and
 \IEEEauthorblockN{3\textsuperscript{rd} Given Name Surname}
 \IEEEauthorblockA{\textit{dept. name of organization (of Aff.)} \\
@@ -47,7 +48,6 @@ component, formatting, style, styling, insert.
 \end{IEEEkeywords}
 
 \section{イントロダクション}
-\subsection{背景と目的}
 組合せ最適化問題とは，複数の制約があり，これらを満たす時に与えられた集合の中から目的関数を最大化または最小化する最適な解を見つける問題である．代表的な例として巡回セールスマン問題，ナップサック問題，スケジューリング問題等がある．しかし，最適解を見つけることは困難である．なぜなら，問題のサイズにより解の数が膨大になり現実的な時間内で求めることが難しいからである．したがって，組合せ最適化問題の新しい解法として注目を集めている量子化技術が使われることが多い．
 
 量子アニーリングは，最適化問題を数式で表現するQUBO(Quadratic Unconstrained Binary Optimization)モデルとIsingモデルと呼ばれるエネルギー関数があり，そのエネルギーを最小化にすることを目的として最適化を図る．さらに，量子アニーリングは実用化が進んでおり，D-Wave社が商業用のアニーリングマシンを開発している．この技術により，従来の手法では解決が困難である組合せ最適化問題が改めて注目を集めている．
@@ -66,14 +66,35 @@ component, formatting, style, styling, insert.
 \item 各タスクには処理を終えるまでの上限時間と最低でも指定された時間内に処理を始める下限時間があり，前のタスクの上限時間と次のタスクが下限時間の差が定められた制限時間内に収まるようにリソースを利用する．
 \end{itemize}
 
-%\begin{figure}[htbp]
-%\centerline{\includegraphics{fsp.png}}
-%\caption{Example of a figure caption.}
-%\label{fig}
-%\end{figure}
+\begin{figure}[htbp]
+\centerline{\includegraphics[scale=0.25]{./fig/fsp.pdf}}
+\caption{フローショップスケジューリング問題のペトリネット}
+\label{fig1}
+\end{figure}
+
+Fig. \ref{fig1}.によるとマシンリソースには処理時間とマシンコストが割り振られているリソースが複数ある．今回は，リソースコストと前のタスクが処理を終え次のタスクが始まるまでの待ち時間を最小化することを目指す．
+
+QUBOモデルで目的関数を定式化すると，
+
+制約条件は，全てのタスクが発火すること，マシンリソースの競合が起きないようにすること，タスクは順序よく処理することである．
+
+
+\subsection{ペトリネット}
+ペトリネット$PN = (N,M_0)$は，プレース，トランジションの2種類のノードから成る有向2部グラフ$N = (P,T,Pre,Post)$と初期マーキング$M_0$で表される．\cite{b2}
+
+$P = \{p_1,p_2,...,p_n\}$はプレースの集合，$T = \{t_1,t_2,...,t_n\}$はトランジションの集合である．プレースにトークンが配置されることにより現在のシステムの状態を表すことができる．$Pre(p,t)$はトランジション$t$に入る入力プレース$p$を繋ぐアークの重みを表している．$Post(p,t)$はトランジション$t$から出ている出力プレース$p$を繋ぐアークの重みを表している．各トランジション$t$の入力プレースに重み以上のトークンが配置されている時トランジション$t$は発火可能であると言う．トランジションの発火は事象の生起を表し，トークンの分布変化が起こる．
+
+Fig. \ref{fig2}.はトランジションの発火の例である．トランジション$t_1$が発火することでプレース$p_1$に配置されていたトークンがなくなりプレース$p_2,p_3$に配置される．
+
+\begin{figure}[htbp]
+\centerline{\includegraphics[scale=0.3]{./fig/fire.pdf}}
+\caption{トランジションの発火によるトークン分布の変化}
+\label{fig2}
+\end{figure}
+
 
 \subsection{QUBOモデル}
-QUBOモデルは最適化問題を表現するモデルの一種である．変数が0か1の値を取るバイナリ変数$q_i$として表現される．また，バイナリ変数の係数が実数値として$Q_{i,j}$と表現される．QUBOモデルの式を以下に示す．
+QUBOモデルは最適化問題を表現するモデルの一種である．変数が0か1の値を取るバイナリ変数$q$として表現される．また，バイナリ変数の係数が実数値として$Q_{i,j}$と表現される．QUBOモデルの式を以下に示す．
 
 \begin{align}
 H = \sum_{i,j} Q_{i,j} q_i q_j
@@ -84,7 +105,7 @@ H = \sum_{i,j} Q_{i,j} q_i q_j
 ハードウェア構成
 \begin{itemize}
 \item CPU：Apple M1 3.2 GHz
-\item メモリ：8 GB
+\item メモリ：8 GB RAM
 \item ストレージ：256 GB SSD
 \end{itemize}  
 
@@ -97,16 +118,10 @@ H = \sum_{i,j} Q_{i,j} q_i q_j
 \item ストレージ：256 GB SSD
 \end{itemize}
 
-\subsection{実験方法}
-
-\subsection{結果}
-
-\section{考察}
-
-\section{結論}
 
 \begin{thebibliography}{00}
-\bibitem{b1} 新城 巧也, ``ペトリネットに基づく実用性を考慮した組合せ最適化問題に対する量子インスパイアード最適化,'' 2022年3月
+\bibitem{b1} 新城 巧也, "ペトリネットに基づく実用性を考慮した組合せ最適化問題に対する量子インスパイアード最適化,'' 2022年3月
+\bibitem{b2}名嘉村 盛和,"ペトリネットに基づくスケジューリング問題へのアプローチ,'' 2015年2月
 \end{thebibliography}
 
 \end{document}
