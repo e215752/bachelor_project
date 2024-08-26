@@ -7,14 +7,15 @@
 \usepackage{amsmath,amssymb,amsfonts}
 \usepackage{algorithmic}
 \usepackage[dvipdfmx]{graphicx}
-\usepackage{svg}
 \usepackage{textcomp}
 \usepackage{xcolor}
+\usepackage{tabularx}
+
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 \begin{document}
 
-\title{量子最適化}
+\title{Petri net-based QUBO Model Formulation for Multi-Resource Flow-Shop Scheduling Problems}
 
 \author{\IEEEauthorblockN{1\textsuperscript{st} Ryota Uechi}
 \IEEEauthorblockA{\textit{Computer Sciences and Intelligent Systems, Faculty of Eng.,} \\
@@ -38,14 +39,9 @@ email address or ORCID}
 \maketitle
 
 \begin{abstract}
-This document is a model and instructions for \LaTeX.
-This and the IEEEtran.cls file define the components of your paper [title, text, heads, etc.]. *CRITICAL: Do Not Use Symbols, Special Characters, Footnotes, 
-or Math in Paper Title or Abstract.
+This paper introduces a Petri net-based approach to addressing multi-resource flow-shop scheduling problems within the context of multi-objective quantum optimization. The multi-resource flow-shop problem, which holds both theoretical and practical significance, represents a real-world application scenario. The practical nature of the problem necessitates the incorporation of multiple objective functions, which adds complexity to its formulation, particularly in representing the energy function within the QUBO (Quadratic Unconstrained Binary Optimization) model.
+Our approach mitigates the complexity of formulating the QUBO model by employing Petri net theory, thereby providing a more efficient solution for these inherently complex problems. The paper further demonstrates the effectiveness of this method through computational examples, utilizing a CPU-based QUBO optimization platform.
 \end{abstract}
-
-\begin{IEEEkeywords}
-component, formatting, style, styling, insert.
-\end{IEEEkeywords}
 
 \section{イントロダクション}
 組合せ最適化問題とは，複数の制約があり，これらを満たす時に与えられた集合の中から目的関数を最大化または最小化する最適な解を見つける問題である．代表的な例として巡回セールスマン問題，ナップサック問題，スケジューリング問題等がある．しかし，最適解を見つけることは困難である．なぜなら，問題のサイズにより解の数が膨大になり現実的な時間内で求めることが難しいからである．したがって，組合せ最適化問題の新しい解法として注目を集めている量子化技術が使われることが多い．
@@ -74,10 +70,63 @@ component, formatting, style, styling, insert.
 
 Fig. \ref{fig1}.によるとマシンリソースには処理時間とマシンコストが割り振られているリソースが複数ある．今回は，リソースコストと前のタスクが処理を終え次のタスクが始まるまでの待ち時間を最小化することを目指す．
 
-QUBOモデルで目的関数を定式化すると，
+QUBOモデルで目的関数を定式化すると，以下の式で表される．
 
-制約条件は，全てのタスクが発火すること，マシンリソースの競合が起きないようにすること，タスクは順序よく処理することである．
+\begin{align}
+E_{o1} &=\sum_i \sum_{r,rc,fd,r\_num} \sum_t \sum_k rc * fd \cdot x[k,t,r\_num] \\
+E_{o2} &= \begin{aligned}
+&\sum_{i,t_1,t_2} \sum_{k_1} \sum_{r_1,r\_num1} \sum_{k_2} \sum_{\substack{r_2,fd,r\_num2 \\ k_1 - fd \geq 0}} \\
+&(k_1 - fd) \cdot x[k_2,t_2,r\_num2] \cdot x[k_1,t_1,r\_num1]
+\end{aligned}
+\end{align}
 
+目的関数(1)は，リソースコストの関数である．目的関数(2)は，待ち時間の関数である．
+
+制約条件は，全てのタスクが発火することを式(3)，マシンリソースの競合が起きないようにすることを式(4)，タスクは順序よく処理することを式(5)で表される．
+\begin{align}
+E_{c1} &= \sum_i (1-\sum_r \sum_{k,t} x[k,t,r\_num[r]])^2 \\
+E_{c2} &= \sum_i \sum_{r,t_1,t_2} \sum_{k_1,k_2} x[k_1,t_1,r\_num[r]] \cdot x[k_2,t_2,r\_num[r]]  \\
+E_{c3} &= \begin{aligned}
+&\sum_i \sum_{r_1} \sum_{r_2,t_1,t_2} \sum_{k_1} \sum_{k_2} \\
+&x[k_1,t_1,r\_num[r_1]] \cdot x[k_2,t_2,r\_num[r_2]]
+\end{aligned}
+\end{align}
+
+式$(1),(2),(3),(4),(5)$に重み$A,B,C,D,E$を乗じてまとめた全体のエネルギー関数は以下のようになる．
+\begin{align}
+E = \begin{aligned}
+&A \cdot E_{c1} + B \cdot E_{c2} + C \cdot E_{c3} \\
+&+ D \cdot E_{o1} + E \cdot E_{o2}
+\end{aligned}
+\end{align}
+
+これらの式で用いた変数をTABLE \ref{variable}にまとめる．
+
+\begin{table}[h]
+\centering
+\caption{Variables in Energy Function}
+\begin{tabularx}{0.45\textwidth}{>{\centering\arraybackslash}p{1.7cm}|X}
+\hline
+変数名 & 定義 \\ \hline 
+$i$ & 何番目のタスクかを示す  \\ 
+ & \\
+$r$ & マシンリソースの名称 \\ 
+ & \\
+$rc$ & 使用したマシンリソースにかかるコスト  \\ 
+ & \\
+$fd$ & 使用したマシンリソースにかかる処理時間  \\ 
+ & \\
+$r\_num$ & マシンリソースを番号付けした値 \\ 
+ & \\
+$t$ & 各タスクに番号付けした値  \\ 
+ & \\
+$k$ & 各タスクの処理における下限時間と上限時間  \\ 
+ & \\
+$x[k,t,r]$ & 時刻$k$でタスク$t$がマシンリソース$r$を使用したときに$x[k,t,r]=1$，それ以外は$x[k,t,r]=0$を示すバイナリ変数 \\ \hline
+
+\end{tabularx}
+\label{variable}
+\end{table}
 
 \subsection{ペトリネット}
 ペトリネット$PN = (N,M_0)$は，プレース，トランジションの2種類のノードから成る有向2部グラフ$N = (P,T,Pre,Post)$と初期マーキング$M_0$で表される．\cite{b2}
@@ -97,24 +146,18 @@ PN &= (N,M_0) \\
 N &= (P,T,Pre,Post) \\
 P &= \{p_1,p_2,p_3,p_4.p_5\} \\
 T &= \{t_1,t_2\} \\
-M_0^T &= (1,0,0,0,0)
-\end{align}
-
-$$
-Pre^T =
+M_0^T &= (1,0,0,0,0) \\
+Pre^T &=
 \begin{bmatrix}
   1 & 0 & 0 & 0 & 0 \\
   0 & 1 & 1 & 0 & 0
-\end{bmatrix}
-$$
-
-$$
-Post^T =
+\end{bmatrix} \\
+Post^T &=
 \begin{bmatrix}
   0 & 1 & 1 & 0 & 0 \\
   0 & 0 & 0 & 1 & 1  
 \end{bmatrix}
-$$
+\end{align}
 
 あるステップ$k$から次の状態変化を定式化することができる．
 
@@ -173,7 +216,112 @@ H = \sum_{i,j} Q_{i,j} q_i q_j
 \item ストレージ：256 GB SSD
 \end{itemize}
 
+\subsection{評価指標}
+評価指標として，複数のハイパーパラメータで計算を行うことによる解の質や実行可能解を得る確率の変動がある．
 
+解の質は，ハイパーパラメータの設定により大きく影響を受けることから最適解の探索のバランスが変わり解の質の変動が生じる．
+
+実行可能解を得る確率は，トレードオフの関係にある関数だと重みが大きい方の目標を達成するように強調されるので実行可能解の確率が低下することがある．
+\subsection{評価方法}
+実験は目的関数のハイパーパラメータのみを調整する手法を行う．18パターンそれぞれにおいて20回ずつ実行計算を行い実行可能解が得られたデータのみで平均のデータを取る．また，20回実行したうち実行可能解が得られた確率を求める．
+
+今回使用したパラメータをTABLE \ref{parameter}に示す．
+
+\begin{table}[h]
+\centering
+\caption{エネルギー関数のハイパーパラメータ}
+\begin{tabularx}{0.25\textwidth}{>{\centering\arraybackslash}p{2.0cm}|X}
+\hline
+$(A,B,C)$ & $(D,E)$ \\ \hline 
+      (600,150,200) & (10, 50)  \\ \hline 
+      (600,150,200) & (10, 40)  \\ \hline 
+      (600,150,200) & (10, 30)  \\ \hline 
+      (600,150,200) & (10, 20)  \\ \hline 
+      (600,150,200) & (10, 10)  \\ \hline 
+      (600,150,200) & (10, 1)  \\ \hline 
+      (600,150,200) & (8, 50)  \\ \hline 
+      (600,150,200) & (8, 40)  \\ \hline 
+      (600,150,200) & (8, 30)  \\ \hline 
+      (600,150,200) & (8, 20)  \\ \hline 
+      (600,150,200) & (8, 10)  \\ \hline 
+      (600,150,200) & (8, 1)  \\ \hline 
+      (600,150,200) & (5, 50)  \\ \hline 
+      (600,150,200) & (5, 40)  \\ \hline 
+      (600,150,200) & (5, 30)  \\ \hline 
+      (600,150,200) & (5, 20)  \\ \hline 
+      (600,150,200) & (5, 10)  \\ \hline 
+      (600,150,200) & (5, 1)  \\ \hline 
+      \hline
+\end{tabularx}
+\label{parameter}
+\end{table}
+
+\subsection{結果}
+$D=\{10,8,5\}$と固定させ，$E$のパラメータを変更させた時の目的関数のエネルギー図を以下に示す．
+%Eを固定した場合のグラフもplotしたいけどパターンが多いから図が増えてしまうなー
+\begin{figure}[htbp]
+\centerline{\includegraphics[scale=0.3]{./fig/D_10.pdf}}
+\caption{$D=10$のときのエネルギー図}
+\label{fig3}
+\end{figure}
+
+\begin{figure}[htbp]
+\centerline{\includegraphics[scale=0.3]{./fig/D_8.pdf}}
+\caption{$D=8$のときのエネルギー図}
+\label{fig4}
+\end{figure}
+
+\begin{figure}[htbp]
+\centerline{\includegraphics[scale=0.3]{./fig/D_5.pdf}}
+\caption{$D=5$のときのエネルギー図}
+\label{fig5}
+\end{figure}
+
+Fig. \ref{fig3}.，\ref{fig4}.，\ref{fig5}.に共通しているのは$E$の値が大きければ$E_{o2}$のエネルギー値は0に近づいていることがわかる．また，$D=10,E=50$の時が解の質が良い結果となっていることが確認できた．
+
+\begin{table}[h]
+    \centering
+    \caption{実行可能解を得ることができた確率}
+    \label{feasible}
+    \begin{tabular}{|c|c|}
+        \hline
+        $(D,E)$ & success[\%]\\ \hline
+        (10,50) & 70\\ \hline
+        (10,40) & 60\\ \hline
+        (10,30) & 45\\ \hline
+        (10,20) & 45\\ \hline
+        (10,10) & 40\\ \hline
+        (10,1) & 15\\ \hline
+        (8,50) & 60\\ \hline
+        (8,40) & 45\\ \hline
+        (8,30) & 70\\ \hline
+        (8,20) & 55\\ \hline
+        (8,10) & 15\\ \hline
+        (8,1) & 10\\ \hline
+        (5,50) & 85\\ \hline
+        (5,40) & 75\\ \hline
+        (5,30) & 60\\ \hline
+        (5,20) & 55\\ \hline
+        (5,10) & 35\\ \hline
+        (5,1) & 35\\ \hline
+    \end{tabular}
+\end{table}
+
+TABLE \ref{feasible}より$D=10,E=50$の時は成功率70\%より成功率が5割を超えていることが確認できる．また，成功率を上げたい場合は$D$の値を小さくし$E$の値を大きくすることで成功率が上がることがわかる．
+
+%パレートフロントもplotしてみた
+\begin{figure}[htbp]
+\centerline{\includegraphics[scale=0.3]{./fig/pareto_solution.pdf}}
+\caption{全体のデータに対するパレートフロント}
+\label{fig6}
+\end{figure}
+
+\subsection{考察}
+パラメータ$E$の値が大きくなることから解の探索範囲が広がることにより実行可能解に到達しやすくなるので成功率があがると考えられる．また，$E$の値が小さいと解の探索範囲が小さくなってしまうので$E_{o1}$のエネルギーの値が大きくなってしまう．
+
+パレートフロントが$E_{o2}=0$に集中していることから全てのタスクが処理されることがシステムが効率的に動作することを示唆している．したがって，$E_{o2}$がシステムの効率性に影響を及ぼしていると考えられる．
+
+$E_{o2}=0$からリソースが過剰に使用されているとも考えられる．リソースコストが高いものだけ使用されコストだけがかかってしまっている．したがって，リソースの最適な割り当てがされてないと考えられる．
 
 \begin{thebibliography}{00}
 \bibitem{b1} 新城 巧也, "ペトリネットに基づく実用性を考慮した組合せ最適化問題に対する量子インスパイアード最適化,'' 2022年3月
