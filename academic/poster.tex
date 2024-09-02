@@ -10,6 +10,7 @@
 \usepackage{textcomp}
 \usepackage{xcolor}
 \usepackage{tabularx}
+\usepackage{multicol}
 
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
@@ -29,11 +30,17 @@ e215752@ie.u-ryukyu.ac.jp}
 Okinawa, Japan \\
 morikazu@ie.u-ryukyu.ac.jp}
 \and
-\IEEEauthorblockN{3\textsuperscript{rd} Given Name Surname}
-\IEEEauthorblockA{\textit{dept. name of organization (of Aff.)} \\
-\textit{name of organization (of Aff.)}\\
-City, Country \\
-email address or ORCID}
+\IEEEauthorblockN{3\textsuperscript{rd} Seiji Shiroma}
+\IEEEauthorblockA{\textit{Computer Sciences and Intelligent Systems, Faculty of Eng.,} \\
+\textit{University of the Ryukyus}\\
+Okinawa, Japan \\
+shiroma@ie.u-ryukyu.ac.jp}
+\and
+\IEEEauthorblockN{4\textsuperscript{th} Takayuki Nakachi}
+\IEEEauthorblockA{\textit{Computer Sciences and Intelligent Systems, Faculty of Eng.,} \\
+\textit{University of the Ryukyus}\\
+Okinawa, Japan \\
+tnakachi@lab.u-ryukyu.ac.jp}
 }
 
 \maketitle
@@ -43,61 +50,147 @@ This paper introduces a Petri net-based approach to addressing multi-resource fl
 Our approach mitigates the complexity of formulating the QUBO model by employing Petri net theory, thereby providing a more efficient solution for these inherently complex problems. The paper further demonstrates the effectiveness of this method through computational examples, utilizing a CPU-based QUBO optimization platform.
 \end{abstract}
 
-\section{イントロダクション}
-組合せ最適化問題とは，複数の制約があり，これらを満たす時に与えられた集合の中から目的関数を最大化または最小化する最適な解を見つける問題である．代表的な例として巡回セールスマン問題，ナップサック問題，スケジューリング問題等がある．しかし，最適解を見つけることは困難である．なぜなら，問題のサイズにより解の数が膨大になり現実的な時間内で求めることが難しいからである．したがって，組合せ最適化問題の新しい解法として注目を集めている量子化技術が使われることが多い．
+\section{Introduction}
+組合せ最適化問題とは、複数の制約条件を満たす集合の中から、目的関数を最大化または最小化する最適解を見つける問題である。代表的な例としては、巡回セールスマン問題、ナップサック問題、スケジューリング問題が挙げられる。しかしながら、多くの組合せ最適化問題はNP困難に分類されており、解候補の数が指数オーダーで増加するため、現実的な時間内に常に最適解を求めることは困難である。この問題に対応するため、解空間の効率的な削減により計算量を減少させる厳密解法や、最適解に近い実行可能解を効率良く求めるヒューリスティックアルゴリズムが開発されてきた。
 
-量子アニーリングは，最適化問題を数式で表現するQUBO(Quadratic Unconstrained Binary Optimization)モデルとIsingモデルと呼ばれるエネルギー関数があり，そのエネルギーを最小化にすることを目的として最適化を図る．さらに，量子アニーリングは実用化が進んでおり，D-Wave社が商業用のアニーリングマシンを開発している．この技術により，従来の手法では解決が困難である組合せ最適化問題が改めて注目を集めている．
+量子アニーリングや量子近似アルゴリズム（QAOA）は、量子コンピュータを用いた一種の最適化アルゴリズムであり、いずれも最適化問題をQUBO（Quadratic Unconstrained Binary Optimization）モデルやIsingモデルとしてエネルギー関数の形で表現し、最適解に近い解を高速に求めることが期待されている。QAOAは量子ゲート方式の最適化アルゴリズムであるため、大規模な最適化計算の実行にはハードウェアのさらなる進展が必要である。一方、量子アニーリングは、D-Wave社が開発した商用量子アニーリングマシンにより数万量子ビットの計算が可能であり、実用化が進んでいる。さらに、デジタル方式でQUBOモデルやIsingモデルに基づく最適化処理を行う量子インスパイヤードシステムや、GPUを用いてアニーリングを模倣するシステムも提案されており、これらは新たな組合せ最適化プラットフォームとして注目を集めている。
 
-本論文で扱うスケジューリング問題は，ジョブショップスケジューリング問題を対象とし，各タスクを処理するのにかかるリソースコストと前のタスクが処理し終えた後，次のタスクを処理し始めるための待ち時間を最小化を目的としている．また，ジョブを増やした際に，どの程度までジョブを増やせるか，その際のハイパーパラメータが見つかるのかついても検証を行う．
+本論文で扱うスケジューリング問題は、ジョブショップスケジューリング問題を対象とし、各タスクのリソースコストとタスク間の待機時間を最小化することを目的としている。また、ジョブの数を増加させた場合に、どの程度まで増加が許容されるか、さらにその際のハイパーパラメータの設定が可能かについても検証を行う。
 
 \section{基礎概念}
+
+\subsection{ペトリネット}
+ペトリネット$PN = (N,M_0)$は，プレース，トランジションの2種類のノードから成る有向2部グラフ$N = (P,T,Pre,Post)$と初期マーキング$M_0$で表される．\cite{b2}
+
+$P = \{p_1,p_2,...,p_n\}$はプレースの集合，$T = \{t_1,t_2,...,t_n\}$はトランジションの集合である．プレースにトークンが配置されることにより現在のシステムの状態を表すことができる．$Pre(p,t)$はトランジション$t$に入る入力プレース$p$を接続するアークの重みを表している．$Post(p,t)$はトランジション$t$から出ている出力プレース$p$を接続するアークの重みを表している．各トランジション$t$の入力プレースに重み以上のトークンが配置されている時トランジション$t$は発火可能であると言う．トランジションの発火は事象の生起を表し，トークンの分布変化が起こる．
+
+
 \subsection{フローショップスケジューリング問題}
-フローショップスケジューリング問題は，複数の工程から構成される複数のジョブを処理するためのスケジューリング問題である．ジョブは複数の工程によって構成され，工程毎に指定された共有リソースを利用する必要がある．各ジョブにおける一つの処理工程をタスクと呼ぶ．\cite{b1}
+フローショップスケジューリング問題は，複数の工程から構成される複数のジョブを処理するためのスケジューリング問題である．ジョブは複数の工程によって構成され，工程毎に指定された共有リソースを利用する必要がある．各ジョブにおける一つの処理工程をタスクと呼ぶ\cite{b1}。
 
-本論文で扱っているスケジューリング問題を以下にまとめる．
+本論文で扱っている複数資源フローショップスケジューリング問題を以下にまとめる．
 
-\begin{itemize}
-\item ジョブの数は15個、1つのジョブには3つのタスクがある．
-\item 各ジョブは複数のタスクを順番に経る必要があり，各タスクは特定のマシンリソースを利用する．
-\item 各タスクには処理を終えるまでの上限時間と最低でも指定された時間内に処理を始める下限時間があり，前のタスクの上限時間と次のタスクが下限時間の差が定められた制限時間内に収まるようにリソースを利用する．
-\end{itemize}
+\begin{enumerate}
+\item ジョブの数は$N$個，それぞれのジョブは$M$個のタスク（工程に対応）で構成される．
+\item 各マシンには単位時間当たりの稼働コストが予め与えられている。
+\item 各マシンの単位作業長当たりの処理時間が予め与えられている。
+\item 各ジョブは$M$個のタスクを決められた順番で処理する必要があり，その順番は全てのジョブで同一である。
+\item 各タスクは予め指定されたマシンリソース群の中から一台のマシンを利用して処理がなされる。一度スタートした処理は中断なく完了まで行われる。
+\item 各タスクは同じジョブの直前タスクの完了以前には処理は開始できない（先行制約）。
+%\item 各タスクには処理を終えるまでの上限時間と最低でも指定された時間内に処理を始める下限時間があり，前のタスクの上限時間と次のタスクが下限時間の差が定められた制限時間内に収まるようにリソースを利用する．
+\item 全てのジョブの全てのタスクに対して、マシンが割り当てられている（完了制約）
+\item 任意の二つのタスク間でマシンの競合が発生しない（競合制約）。
+\end{enumerate}
+また、目的関数として次の二つを考える。
+\begin{enumerate}
+\setcounter{enumi}{8}
+\item 各タスクのリソースの待ち時間の総和を最小化する
+\item リソースコストの総和を最小化する
+\end{enumerate}
 
-\begin{figure}[htbp]
-\centerline{\includegraphics[scale=0.25]{./fig/fsp.pdf}}
-\caption{フローショップスケジューリング問題のペトリネット}
-\label{fig1}
-\end{figure}
 
-Fig. \ref{fig1}.によるとマシンリソースには処理時間とマシンコストが割り振られているリソースが複数ある．今回は，リソースコストと前のタスクが処理を終え次のタスクが始まるまでの待ち時間を最小化することを目指す．
 
-QUBOモデルで目的関数を定式化すると，以下の式で表される．
 
+%Fig. \ref{fig2}.はトランジションの発火の例である．トランジション$t_1$が発火することでプレース$p_1$に配置されていたトークンがなくなりプレース$p_2,p_3$に配置される．5個のプレースと2個のトランジションをアークで接続したペトリネットモデルであり以下に示す式で表現できる．
+%
+%\begin{figure}[htbp]
+%\centerline{\includegraphics[scale=0.3]{./fig/fire.pdf}}
+%\caption{トランジションの発火によるトークン分布の変化}
+%\label{fig2}
+%\end{figure}
+
+%\begin{align}
+%PN &= (N,M_0) \\
+%N &= (P,T,Pre,Post) \\
+%P &= \{p_1,p_2,p_3,p_4.p_5\} \\
+%T &= \{t_1,t_2\} \\
+%M_0^T &= (1,0,0,0,0) \\
+%Pre^T &=
+%\begin{bmatrix}
+%  1 & 0 & 0 & 0 & 0 \\
+%  0 & 1 & 1 & 0 & 0
+%\end{bmatrix} \\
+%Post^T &=
+%\begin{bmatrix}
+%  0 & 1 & 1 & 0 & 0 \\
+%  0 & 0 & 0 & 1 & 1  
+%\end{bmatrix}
+%\end{align}
+%
+%あるステップ$k$から次の状態変化を定式化することができる．
+%
+%\begin{align}
+%M_{k+1} = M_k + (Post - Pre) \cdot X_k
+%\end{align}
+%
+%ここで，$X_k$はトランジションの発火回数を表すベクトルである．$t_1$が発火することにより状態が変化していることを次のように計算できる．
+%
+%$$
+%M_1 = M_0 + 
+%\begin{bmatrix}
+%  -1 & 0 \\
+%  1 & -1 \\
+%  1 & -1 \\
+%  0 & 1 \\
+%  0 & 1
+%\end{bmatrix}
+%\cdot 
+%\begin{bmatrix}
+%  1 \\
+%  0
+%\end{bmatrix}
+%= 
+%\begin{bmatrix}
+%  0 \\
+%  1 \\
+%  1 \\
+%  0 \\
+%  0
+%\end{bmatrix}
+%$$
+
+
+
+\section{Petri net-based QUBO Formulation for MRFSSP}
+
+\subsection{Petri net model}
+
+複数資源フローショップスケジューリング問題に対するペトリネットモデルは、Fig. \ref{fig1}のように表現できる。
+Fig. \ref{fig1}では、15個のジョブを省略した形で記載している。
+各ジョブはプレース、トランジションの交互列となるパスで表されている。例えば、Job1に対応するパス$P_{1,1}, T_{1,1}, P_{1,2}, ..., P_{1,4}$は、3種類のタスク（工程）$T_{1,1}, T_{1,2}, T_{1,3}$から構成されており、それぞれ、$R_0$, $R_1$, $R_2$のマシンリソースを必要としている。
+3種類のマシンリソースは、カラートークンとしてマシンID, 処理速度, マシンコストの情報を含む文字列で表されている。ここでは紙面の都合上詳細な説明は省略する。
+このペトリネットモデルのようにドメイン知識さえあれば、わずかなペトリネットの記述のルールに基づいてペトリネットモデルを作成することができる。
+
+%Fig. \ref{fig1}.によるとマシンリソースには処理時間とマシンコストが割り振られているリソースが複数ある．今回は，リソースコストと前のタスクが処理を終え次のタスクが始まるまでの待ち時間を最小化することを目指す．
+
+\subsection{QUBO Formulation}
+
+著者等の既存研究\cite{shinjo}において、基本的なQUBO定式化の方式を提案している。本稿では、それに基づいて複数資源フローショップスケジューリング問題のペトリネットモデルからの定式化を行う。
+
+ペトリネットの発火規則に従うためには、以下のエネルギー関数をゼロにする必要がある。
+すなわち、$E_{c1}$及び$E_{c2}$ともトランジションの発火にはその入力プレース全てにトークンが配置されている必要があり、かつ、同じ入力プレースで同じトークンを前提に発火を行うことは禁止されているため、その競合状態にある場合には、一つのトランジションの発火のみに当該トークンが利用される必要がある。このようにペトリネットの発火規則から以下のエネルギー関数が生成できる。
 \begin{align}
-E_{o1} &=\sum_i \sum_{r,rc,fd,r\_num} \sum_t \sum_k rc * fd \cdot x[k,t,r\_num] \\
-E_{o2} &= \begin{aligned}
-&\sum_{i,t_1,t_2} \sum_{k_1} \sum_{r_1,r\_num1} \sum_{k_2} \sum_{\substack{r_2,fd,r\_num2 \\ k_1 - fd \geq 0}} \\
-&(k_1 - fd) \cdot x[k_2,t_2,r\_num2] \cdot x[k_1,t_1,r\_num1]
-\end{aligned}
+E_{c1} &= \sum_{k_1,k_2} \sum_r \sum_{(j_1,j_2)} \sum_i x_{k_1}^{r}(t_{i}^{j_1}) \cdot x_{k_2}^{r}(t_{i}^{j_2}) \label{eqn:presedence}\\
+E_{c2} &= \sum_{k_1,k_2} \sum_{r_1,r_2} \sum_j \sum_i x_{k_1}^{r_1}(t_{i}^{j}) \cdot x_{k_2}^{r_2}(t_{i+1}^{j})  \label{eqn:conflict}
+\end{align}
+一方、本スケジューリング問題は、全てのジョブが完了するまでのタスクの実行計画を作成することであるので、全てのトランジションがただ一度ずつ発火する必要がある。
+これより、以下のエネルギー関数が生成できる。
+\begin{align}
+E_{c3} &= ( 1 - \sum_k \sum_r \sum_j \sum_i x_{k}^{r}(t_{i}^{j}))^2  \label{eqn:allTasks}
 \end{align}
 
-目的関数(1)は，リソースコストの関数である．目的関数(2)は，待ち時間の関数である．
-
-制約条件は，全てのタスクが発火することを式(3)，マシンリソースの競合が起きないようにすることを式(4)，タスクは順序よく処理することを式(5)で表される．
+目的関数として、リソースの総コストの最小化とタスクの処理の待ち時間の最小化となるため、ペトリネットの振る舞いモデルより以下のエネルギー関数が導かれる。
 \begin{align}
-E_{c1} &= \sum_i (1-\sum_r \sum_{k,t} x[k,t,r\_num[r]])^2 \\
-E_{c2} &= \sum_i \sum_{r,t_1,t_2} \sum_{k_1,k_2} x[k_1,t_1,r\_num[r]] \cdot x[k_2,t_2,r\_num[r]]  \\
-E_{c3} &= \begin{aligned}
-&\sum_i \sum_{r_1} \sum_{r_2,t_1,t_2} \sum_{k_1} \sum_{k_2} \\
-&x[k_1,t_1,r\_num[r_1]] \cdot x[k_2,t_2,r\_num[r_2]]
-\end{aligned}
+E_{o1} &=\sum_k \sum_r \sum_j \sum_i rc^r \cdot fd^r \cdot x_{k}^{r}(t_{i}^{j}) \label{eqn:totalCost}\\
+E_{o2} &= \sum_i \sum_{k_1,k_2} \sum_{r_1,r_2} \sum_j \sum_i ({k_1 - fd^{r_2}}) \cdot x_{k_2}^{r_2}(t_{i+1}^{j}) \cdot x_{k_1}^{r_1}(t_{i}^{j}) \label{eqn:waitingTime}
 \end{align}
 
-式$(1),(2),(3),(4),(5)$に重み$A,B,C,D,E$を乗じてまとめた全体のエネルギー関数は以下のようになる．
+
+式(\ref{eqn:presedence}),(\ref{eqn:conflict}),(\ref{eqn:allTasks}),(\ref{eqn:totalCost}),(\ref{eqn:waitingTime})に重み$A$, $B$, $C$, $D$, $E$を乗じてまとめた全体のエネルギー関数は以下のようになる．
 \begin{align}
-E = \begin{aligned}
+E = 
 &A \cdot E_{c1} + B \cdot E_{c2} + C \cdot E_{c3} \\
 &+ D \cdot E_{o1} + E \cdot E_{o2}
-\end{aligned}
 \end{align}
 
 これらの式で用いた変数をTABLE \ref{variable}にまとめる．
@@ -112,107 +205,49 @@ $i$ & 何番目のタスクかを示す  \\
  & \\
 $r$ & マシンリソースの名称 \\ 
  & \\
-$rc$ & 使用したマシンリソースにかかるコスト  \\ 
+$j$ & 何番目のジョブかを示す \\ 
  & \\
-$fd$ & 使用したマシンリソースにかかる処理時間  \\ 
+$k$ & マシンリソースを番号付けした値 \\ 
  & \\
-$r\_num$ & マシンリソースを番号付けした値 \\ 
+$rc^r$ & 使用したマシンリソース$r$にかかるコスト  \\ 
  & \\
-$t$ & 各タスクに番号付けした値  \\ 
+$fd^r$ & 使用したマシンリソース$r$にかかる処理時間  \\ 
  & \\
-$k$ & 各タスクの処理における下限時間と上限時間  \\ 
+$k$ & 各タスクの処理における下限時間と上限時間の間をとる時間  \\ 
  & \\
-$x[k,t,r]$ & 時刻$k$でタスク$t$がマシンリソース$r$を使用したときに$x[k,t,r]=1$，それ以外は$x[k,t,r]=0$を示すバイナリ変数 \\ \hline
+$t_{i}^{j}$ & ジョブ$j$の$i$番目のタスク  \\ 
+ & \\
+ $x_{k}^{r}(t_{i}^{j})$ & $t_{i}^{j}$が時刻$k$でマシンリソース$r$を使用したときに$x_{k}^{r}(t_{i}^{j})=1$，それ以外は0を示すバイナリ変数 \\ \hline
 
 \end{tabularx}
 \label{variable}
 \end{table}
 
-\subsection{ペトリネット}
-ペトリネット$PN = (N,M_0)$は，プレース，トランジションの2種類のノードから成る有向2部グラフ$N = (P,T,Pre,Post)$と初期マーキング$M_0$で表される．\cite{b2}
 
-$P = \{p_1,p_2,...,p_n\}$はプレースの集合，$T = \{t_1,t_2,...,t_n\}$はトランジションの集合である．プレースにトークンが配置されることにより現在のシステムの状態を表すことができる．$Pre(p,t)$はトランジション$t$に入る入力プレース$p$を接続するアークの重みを表している．$Post(p,t)$はトランジション$t$から出ている出力プレース$p$を接続するアークの重みを表している．各トランジション$t$の入力プレースに重み以上のトークンが配置されている時トランジション$t$は発火可能であると言う．トランジションの発火は事象の生起を表し，トークンの分布変化が起こる．
-
-Fig. \ref{fig2}.はトランジションの発火の例である．トランジション$t_1$が発火することでプレース$p_1$に配置されていたトークンがなくなりプレース$p_2,p_3$に配置される．5個のプレースと2個のトランジションをアークで接続したペトリネットモデルであり以下に示す式で表現できる．
 
 \begin{figure}[htbp]
-\centerline{\includegraphics[scale=0.3]{./fig/fire.pdf}}
-\caption{トランジションの発火によるトークン分布の変化}
-\label{fig2}
+\centerline{\includegraphics[scale=0.25]{./fig/fsp.pdf}}
+\caption{Petri net model of a flow-shop system}
+\label{fig1}
 \end{figure}
 
-\begin{align}
-PN &= (N,M_0) \\
-N &= (P,T,Pre,Post) \\
-P &= \{p_1,p_2,p_3,p_4.p_5\} \\
-T &= \{t_1,t_2\} \\
-M_0^T &= (1,0,0,0,0) \\
-Pre^T &=
-\begin{bmatrix}
-  1 & 0 & 0 & 0 & 0 \\
-  0 & 1 & 1 & 0 & 0
-\end{bmatrix} \\
-Post^T &=
-\begin{bmatrix}
-  0 & 1 & 1 & 0 & 0 \\
-  0 & 0 & 0 & 1 & 1  
-\end{bmatrix}
-\end{align}
 
-あるステップ$k$から次の状態変化を定式化することができる．
 
-\begin{align}
-M_{k+1} = M_k + (Post - Pre) \cdot X_k
-\end{align}
-
-ここで，$X_k$はトランジションの発火回数を表すベクトルである．$t_1$が発火することにより状態が変化していることを次のように計算できる．
-
-$$
-M_1 = M_0 + 
-\begin{bmatrix}
-  -1 & 0 \\
-  1 & -1 \\
-  1 & -1 \\
-  0 & 1 \\
-  0 & 1
-\end{bmatrix}
-\cdot 
-\begin{bmatrix}
-  1 \\
-  0
-\end{bmatrix}
-= 
-\begin{bmatrix}
-  0 \\
-  1 \\
-  1 \\
-  0 \\
-  0
-\end{bmatrix}
-$$
-
-\subsection{QUBOモデル}
-QUBOモデルは最適化問題を表現するモデルの一種である．変数が0か1の値を取るバイナリ変数$q$として表現される．また，バイナリ変数の係数が実数値として$Q_{i,j}$と表現される．QUBOモデルの式を以下に示す．
-
-\begin{align}
-H = \sum_{i,j} Q_{i,j} q_i q_j
-\end{align}
-
-\section{評価実験}
-\subsection{実験環境}
+\section{Computational Examples}
+\subsection{Environments}
 ハードウェア構成
 \begin{itemize}
 \item CPU：Apple M1 3.2 GHz
 \item メモリ：8 GB RAM
-\item ストレージ：256 GB SSD
-\end{itemize}  
+\item Memory: 256 GB SSD
+\end{itemize}
 
 \vspace{\baselineskip}
 
 ソフトウェア構成 
 \begin{itemize}
 \item OS：macOS Sonoma 14.3.1
-\item プログラミング言語とライブラリ：Python 3.10.14，openjij 0.9.2，re 2.2.1，pyqubo 1.4.0
+\item プログラミング言語とライブラリ：Python 3.10.14，openjij 0.9.2，pyqubo 1.4.0
 \item ストレージ：256 GB SSD
 \end{itemize}
 
@@ -223,109 +258,92 @@ H = \sum_{i,j} Q_{i,j} q_i q_j
 
 実行可能解を得る確率は，トレードオフの関係にある関数だと重みが大きい方の目標を達成するように強調されるので実行可能解の確率が低下することがある．
 \subsection{評価方法}
-実験は目的関数のハイパーパラメータのみを調整する手法を行う．18パターンそれぞれにおいて20回ずつ実行計算を行い実行可能解が得られたデータのみで平均のデータを取る．また，20回実行したうち実行可能解が得られた確率を求める．
+実験は目的関数のハイパーパラメータのみを調整する手法を行う．30パターンそれぞれにおいて20回ずつ実行計算を行い実行可能解が得られたデータのみで平均のデータを取る．また，20回実行したうち実行可能解が得られた確率を求める．
 
 今回使用したパラメータをTABLE \ref{parameter}に示す．
 
 \begin{table}[h]
 \centering
 \caption{エネルギー関数のハイパーパラメータ}
-\begin{tabularx}{0.25\textwidth}{>{\centering\arraybackslash}p{2.0cm}|X}
-\hline
-$(A,B,C)$ & $(D,E)$ \\ \hline 
-      (600,150,200) & (10, 50)  \\ \hline 
-      (600,150,200) & (10, 40)  \\ \hline 
-      (600,150,200) & (10, 30)  \\ \hline 
-      (600,150,200) & (10, 20)  \\ \hline 
-      (600,150,200) & (10, 10)  \\ \hline 
-      (600,150,200) & (10, 1)  \\ \hline 
-      (600,150,200) & (8, 50)  \\ \hline 
-      (600,150,200) & (8, 40)  \\ \hline 
-      (600,150,200) & (8, 30)  \\ \hline 
-      (600,150,200) & (8, 20)  \\ \hline 
-      (600,150,200) & (8, 10)  \\ \hline 
-      (600,150,200) & (8, 1)  \\ \hline 
-      (600,150,200) & (5, 50)  \\ \hline 
-      (600,150,200) & (5, 40)  \\ \hline 
-      (600,150,200) & (5, 30)  \\ \hline 
-      (600,150,200) & (5, 20)  \\ \hline 
-      (600,150,200) & (5, 10)  \\ \hline 
-      (600,150,200) & (5, 1)  \\ \hline 
-      \hline
-\end{tabularx}
 \label{parameter}
+\begin{tabular}{|c|c|@{\hskip 10pt}|c|c|}
+    \hline
+    $(A,B,C)$ & (D,E) & $(A,B,C)$ & (D,E) \\ \hline
+    (600,150,250) & (1,1) & (600,150,250) & (8,30) \\ \hline
+    (600,150,250) & (1,10) & (600,150,250) & (8,40) \\ \hline
+    (600,150,250) & (1,20) & (600,150,250) & (8,50) \\ \hline
+    (600,150,250) & (1,30) & (600,150,250) & (10,1) \\ \hline
+    (600,150,250) & (1,40) & (600,150,250) & (10,10) \\ \hline
+    (600,150,250) & (1,50) & (600,150,250) & (10,20) \\ \hline
+    (600,150,250) & (5,1) & (600,150,250) & (10,30) \\ \hline
+    (600,150,250) & (5,10) & (600,150,250) & (10,40) \\ \hline
+    (600,150,250) & (5,20) & (600,150,250) & (10,50) \\ \hline
+    (600,150,250) & (5,30) & (600,150,250) & (13,1) \\ \hline
+    (600,150,250) & (5,40) & (600,150,250) & (13,10) \\ \hline
+    (600,150,250) & (5,50) & (600,150,250) & (13,20) \\ \hline
+    (600,150,250) & (8,1) & (600,150,250) & (13,30) \\ \hline
+    (600,150,250) & (8,10) & (600,150,250) & (13,40) \\ \hline
+    (600,150,250) & (8,20) & (600,150,250) & (13,50) \\ \hline
+\end{tabular}
 \end{table}
 
 \subsection{結果}
-$D=\{10,8,5\}$と固定させ，$E$のパラメータを変更させた時の目的関数のエネルギー図を以下に示す．
+$D=\{1,5,8,10,13\}$と固定させ，$E$のパラメータを変更させた時の目的関数のエネルギー図を以下に示す．
 %Eを固定した場合のグラフもplotしたいけどパターンが多いから図が増えてしまうなー
 \begin{figure}[htbp]
-\centerline{\includegraphics[scale=0.3]{./fig/D_10.pdf}}
-\caption{$D=10$のときのエネルギー図}
-\label{fig3}
+\centerline{\includegraphics[scale=0.3]{./fig/D.pdf}}
+\caption{$D$を固定したときのresource costとwaiting timeのエネルギー図}
+\label{fig2}
 \end{figure}
-
-\begin{figure}[htbp]
-\centerline{\includegraphics[scale=0.3]{./fig/D_8.pdf}}
-\caption{$D=8$のときのエネルギー図}
-\label{fig4}
-\end{figure}
-
-\begin{figure}[htbp]
-\centerline{\includegraphics[scale=0.3]{./fig/D_5.pdf}}
-\caption{$D=5$のときのエネルギー図}
-\label{fig5}
-\end{figure}
-
-Fig. \ref{fig3}.，\ref{fig4}.，\ref{fig5}.に共通しているのは$E$の値が大きければ$E_{o2}$のエネルギー値は0に近づいていることがわかる．また，$D=10,E=50$の時が解の質が良い結果となっていることが確認できた．
 
 \begin{table}[h]
     \centering
     \caption{実行可能解を得ることができた確率}
     \label{feasible}
-    \begin{tabular}{|c|c|}
+    \begin{tabular}{|c|c|c|c|}
         \hline
-        $(D,E)$ & success[\%]\\ \hline
-        (10,50) & 70\\ \hline
-        (10,40) & 60\\ \hline
-        (10,30) & 45\\ \hline
-        (10,20) & 45\\ \hline
-        (10,10) & 40\\ \hline
-        (10,1) & 15\\ \hline
-        (8,50) & 60\\ \hline
-        (8,40) & 45\\ \hline
-        (8,30) & 70\\ \hline
-        (8,20) & 55\\ \hline
-        (8,10) & 15\\ \hline
-        (8,1) & 10\\ \hline
-        (5,50) & 85\\ \hline
-        (5,40) & 75\\ \hline
-        (5,30) & 60\\ \hline
-        (5,20) & 55\\ \hline
-        (5,10) & 35\\ \hline
-        (5,1) & 35\\ \hline
+        $(D,E)$ & success[\%] & $(D,E)$ & success[\%] \\ \hline
+        (1,1) & 100 & (8,30) & 70 \\ \hline
+        (1,10) & 95 & (8,40) & 90 \\ \hline
+        (1,20) & 100 & (8,50) & 80 \\ \hline
+        (1,30) & 100 & (10,1) & 60 \\ \hline
+        (1,40) & 100 & (10,10) & 65 \\ \hline
+        (1,50)  & 100 & (10,20)  & 100 \\ \hline
+        (5,1)  & 65 & (10,30) & 90 \\ \hline
+        (5,10)  & 45 & (10,40) & 80 \\ \hline
+        (5,20)  & 65 & (10,50) & 90 \\ \hline
+        (5,30)  & 75 & (13,1) & 100 \\ \hline
+        (5,40)  & 70 & (13,10) & 85 \\ \hline
+        (5,50)   & 90 & (13,20) & 90 \\ \hline
+        (8,1)   & 55 & (13,30) & 100 \\ \hline
+        (8,10)   & 60 & (13,40) & 100 \\ \hline
+        (8,20)   & 75 & (13,50) & 100 \\ \hline
     \end{tabular}
 \end{table}
 
-TABLE \ref{feasible}より$D=10,E=50$の時は成功率70\%より成功率が5割を超えていることが確認できる．また，成功率を上げたい場合は$D$の値を小さくし$E$の値を大きくすることで成功率が上がることがわかる．
 
 %パレートフロントもplotしてみた
-\begin{figure}[htbp]
-\centerline{\includegraphics[scale=0.3]{./fig/pareto_solution.pdf}}
-\caption{全体のデータに対するパレートフロント}
-\label{fig6}
-\end{figure}
+%\begin{figure}[htbp]
+%\centerline{\includegraphics[scale=0.3]{./fig/Figure1.pdf}}
+%\caption{全体のデータに対するパレートフロント}
+%\label{fig6}
+%\end{figure}
 
-\subsection{考察}
-パラメータ$E$の値が大きくなることから解の探索範囲が広がることにより実行可能解に到達しやすくなるので成功率があがると考えられる．また，$E$の値が小さいと解の探索範囲が小さくなってしまうので$E_{o1}$のエネルギーの値が大きくなってしまう．
+TABLE \ref{feasible}よりパラメータ$E$の値が大きくなるにつれて成功率が高くなる傾向が見られる．
 
-パレートフロントが$E_{o2}=0$に集中していることから全てのタスクが処理されることがシステムが効率的に動作することを示唆している．したがって，$E_{o2}$がシステムの効率性に影響を及ぼしていると考えられる．
+Fig. \ref{fig2}.よりパラメータ$E$がの値が大きくなるにつれ実線の$E_{o1}$が小さくなっていくことが確認できた．また，パラメータ$D$の値が大きいと破線の$E_{o2}$のエネルギーが低くなり柔軟なリソース配分が可能であることを示している．
 
-$E_{o2}=0$からリソースが過剰に使用されているとも考えられる．リソースコストが高いものだけ使用されコストだけがかかってしまっている．したがって，リソースの最適な割り当てがされてないと考えられる．
+\clearpage
+
+\section{まとめ}
+本研究では，フローショップスケジューリング問題に対する定式化のアプローチとしてペトリネットに基づいて生成されるQUBOモデルの定式化を行なった．ジョブの数を15に固定し，その際の異なるパラメータの設定において実行可能解を得る確率だけでなく，解の質についても評価を行いパラメータ設定の有効性を評価した．
+
+得られた結果として，パラメータ$D$と$E$の設定により解の質と実行可能解の取得確率が変動することが示された．フローショップスケジューリング問題において，制約条件のパラメータを固定した条件下では目的関数のパラメータ設定がスケジューリングの効率化に寄与する可能性があることを示唆している．このことから解の質と計算のバランスを考慮したパラメータ調整の重要性が示すことができた．
 
 \begin{thebibliography}{00}
 \bibitem{b1} 新城 巧也, "ペトリネットに基づく実用性を考慮した組合せ最適化問題に対する量子インスパイアード最適化,'' 2022年3月
 \bibitem{b2}名嘉村 盛和,"ペトリネットに基づくスケジューリング問題へのアプローチ,'' 2015年2月
 \end{thebibliography}
+
 
 \end{document}
