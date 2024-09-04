@@ -11,38 +11,36 @@
 \usepackage{xcolor}
 \usepackage{tabularx}
 \usepackage{multicol}
-\usepackage{array}
 
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 \begin{document}
 
-
 \title{Petri net-based QUBO Model Formulation for Multi-Resource Flow-Shop Scheduling Problems}
 
-\author{\IEEEauthorblockN{1\textsuperscript{st} Ryota Uechi}
+\author{\IEEEauthorblockN{Ryota Uechi}
 \IEEEauthorblockA{\textit{Computer Sciences and Intelligent Systems, Faculty of Eng.,} \\
 \textit{University of the Ryukyus}\\
 Okinawa, Japan \\
 e215752@ie.u-ryukyu.ac.jp}
 \and
-\IEEEauthorblockN{2\textsuperscript{nd} Morikazu Nakamura}
+\IEEEauthorblockN{ Morikazu Nakamura}
 \IEEEauthorblockA{\textit{Computer Sciences and Intelligent Systems, Faculty of Eng.,} \\
 \textit{University of the Ryukyus}\\
 Okinawa, Japan \\
 morikazu@ie.u-ryukyu.ac.jp}
 \and
-\IEEEauthorblockN{3\textsuperscript{rd} Seiji Shiroma}
+\IEEEauthorblockN{Tadashi Shiroma}
 \IEEEauthorblockA{\textit{Computer Sciences and Intelligent Systems, Faculty of Eng.,} \\
 \textit{University of the Ryukyus}\\
 Okinawa, Japan \\
 shiroma@ie.u-ryukyu.ac.jp}
 \and
-\IEEEauthorblockN{4\textsuperscript{th} Takayuki Nakachi}
-\IEEEauthorblockA{\textit{Computer Sciences and Intelligent Systems, Faculty of Eng.,} \\
+\IEEEauthorblockN{Takayuki Nakachi}
+\IEEEauthorblockA{\textit{Information Technology Center,} \\
 \textit{University of the Ryukyus}\\
 Okinawa, Japan \\
-tnakachi@lab.u-ryukyu.ac.jp}
+takayuki.nakachi@ieee.org}
 }
 
 \maketitle
@@ -53,42 +51,46 @@ Our approach mitigates the complexity of formulating the QUBO model by employing
 \end{abstract}
 
 \section{Introduction}
-組合せ最適化問題とは、複数の制約条件を満たす集合の中から、目的関数を最大化または最小化する最適解を見つける問題である。代表的な例としては、巡回セールスマン問題、ナップサック問題、スケジューリング問題が挙げられる。しかしながら、多くの組合せ最適化問題はNP困難に分類されており、解候補の数が指数オーダーで増加するため、現実的な時間内に常に最適解を求めることは困難である。この問題に対応するため、解空間の効率的な削減により計算量を減少させる厳密解法や、最適解に近い実行可能解を効率良く求めるヒューリスティックアルゴリズムが開発されてきた。
+A combinatorial optimization problem involves identifying an optimal solution that either maximizes or minimizes an objective function subject to constraints. Typical instances of such problems include the traveling salesman problem, the knapsack problem, and various scheduling problems. However, many combinatorial optimization problems fall under the category of NP-hard. Consequently, as the number of potential solutions increases exponentially, it becomes challenging to find the optimal solution within a feasible timeframe consistently. To mitigate this challenge, researchers have developed exact solution methods that minimize computational complexity by efficiently narrowing the solution space and heuristic algorithms that efficiently identify feasible solutions that approximate the optimal solution.
 
-量子アニーリングや量子近似アルゴリズム（QAOA）は、量子コンピュータを用いた一種の最適化アルゴリズムであり、いずれも最適化問題をQUBO（Quadratic Unconstrained Binary Optimization）モデルやIsingモデルとしてエネルギー関数の形で表現し、最適解に近い解を高速に求めることが期待されている。QAOAは量子ゲート方式の最適化アルゴリズムであるため、大規模な最適化計算の実行にはハードウェアのさらなる進展が必要である。一方、量子アニーリングは、D-Wave社が開発した商用量子アニーリングマシンにより数万量子ビットの計算が可能であり、実用化が進んでいる。さらに、デジタル方式でQUBOモデルやIsingモデルに基づく最適化処理を行う量子インスパイヤードシステムや、GPUを用いてアニーリングを模倣するシステムも提案されており、これらは新たな組合せ最適化プラットフォームとして注目を集めている。
+Quantum annealing and quantum approximate optimization algorithms (QAOA) represent optimization algorithms designed for quantum computers. Both approaches formulate the optimization problem as an energy function, represented either in the QUBO (Quadratic Unconstrained Binary Optimization) model or the Ising model, and are anticipated to generate solutions near the optimal solution efficiently. QAOA, being a quantum gate-based optimization algorithm, requires further advancements in quantum hardware to enable large-scale optimization computations. Conversely, quantum annealing has already seen practical applications, with D-Wave's commercial quantum annealing machine capable of processing tens of thousands of qubits. Additionally, quantum-inspired systems, which perform optimization computations digitally based on the QUBO or Ising model, and systems that emulate annealing processes using GPUs have been proposed. These emerging platforms are gaining attention as novel solutions for combinatorial optimization.
 
-本論文で扱うスケジューリング問題は、ジョブショップスケジューリング問題を対象とし、各タスクのリソースコストとタスク間の待機時間を最小化することを目的としている。また、ジョブの数を増加させた場合に、どの程度まで増加が許容されるか、さらにその際のハイパーパラメータの設定が可能かについても検証を行う。
+This paper examines job shop scheduling problems to minimize the resource costs associated with each task and the waiting time between tasks. Furthermore, the study investigates the extent to which the system can handle an increase in the number of jobs and whether appropriate hyperparameters can be determined under such conditions.
 
-\section{基礎概念}
+\section{Preriminaries}
 
-\subsection{ペトリネット}
-ペトリネット$PN = (N,M_0)$は，プレース，トランジションの2種類のノードから成る有向2部グラフ$N = (P,T,Pre,Post)$と初期マーキング$M_0$で表される．\cite{b1}
+\subsection{Petri net}
+A Petri net $PN = (N,M_0)$ is represented by a directed bipartite graph consisting of two types of nodes, places and transitions, denoted as $N = (P,T,Pre,Post)$, along with an initial marking $M_0$ \cite{b1}.
 
-$P = \{p_1,p_2,...,p_n\}$はプレースの集合，$T = \{t_1,t_2,...,t_n\}$はトランジションの集合である．プレースにトークンが配置されることにより現在のシステムの状態を表すことができる．$Pre(p,t)$はトランジション$t$に入る入力プレース$p$を接続するアークの重みを表している．$Post(p,t)$はトランジション$t$から出ている出力プレース$p$を接続するアークの重みを表している．各トランジション$t$の入力プレースに重み以上のトークンが配置されている時トランジション$t$は発火可能であると言う．トランジションの発火は事象の生起を表し，トークンの分布変化が起こる．
+$P = \{p_1, p_2, \ldots, p_n\}$ represents the set of places, and $T = \{t_1, t_2, \ldots, t_n\}$ represents the set of transitions. The state of the current system can be represented by the placement of tokens in the places. $Pre(p,t)$ denotes the weight of the arc that connects the input place $p$ to the transition $t$. $Post(p,t)$ denotes the weight of the arc that connects the output place $p$ from the transition $t$. A transition $t$ is said to be enabled when the number of tokens in its input places meets or exceeds the weight of the corresponding arcs. The firing of a transition represents the occurrence of an event, which leads to a change in the distribution of tokens.
 
 
-\subsection{フローショップスケジューリング問題}
-フローショップスケジューリング問題は，複数の工程から構成される複数のジョブを処理するためのスケジューリング問題である．ジョブは複数の工程によって構成され，工程毎に指定された共有リソースを利用する必要がある．各ジョブにおける一つの処理工程をタスクと呼ぶ\cite{b1}。
+\subsection{Flow Shop Scheduling Problem} 
+The flow shop scheduling problem is a type of scheduling problem that involves processing multiple jobs, each composed of several operations. 
+Each job is comprised of multiple operations, and each operation requires the use of designated shared resources. A single processing operation within a job is referred to as a task \cite{b2}.
 
-本論文で扱っている複数資源フローショップスケジューリング問題を以下にまとめる．
+The multi-resource flow shop scheduling problem addressed in this paper is summarized as follows:
 
-\begin{enumerate}
-\item ジョブの数は$N$個，それぞれのジョブは$M$個のタスク（工程に対応）で構成される．
-\item 各マシンには単位時間当たりの稼働コストが予め与えられている。
-\item 各マシンの単位作業長当たりの処理時間が予め与えられている。
-\item 各ジョブは$M$個のタスクを決められた順番で処理する必要があり，その順番は全てのジョブで同一である。
-\item 各タスクは予め指定されたマシンリソース群の中から一台のマシンを利用して処理がなされる。一度スタートした処理は中断なく完了まで行われる。
-\item 各タスクは同じジョブの直前タスクの完了以前には処理は開始できない（先行制約）。
-%\item 各タスクには処理を終えるまでの上限時間と最低でも指定された時間内に処理を始める下限時間があり，前のタスクの上限時間と次のタスクが下限時間の差が定められた制限時間内に収まるようにリソースを利用する．
-\item 全てのジョブの全てのタスクに対して、マシンが割り当てられている（完了制約）
-\item 任意の二つのタスク間でマシンの競合が発生しない（競合制約）。
+\begin{enumerate} 
+\item The number of jobs is $N$, and each job consists of $M$ tasks (corresponding to operations). 
+\item The operating cost per unit time is predetermined for each machine. 
+\item The processing time per unit operation length is predetermined for each machine. 
+\item Each job must process $M$ tasks in a specified order, which is the same for all jobs. 
+\item Each task is processed using a machine from a predetermined set of machine resources. Once a task has started, it must be completed without interruption. 
+\item Each task cannot begin processing until the preceding task of the same job is completed (precedence constraint). 
+%\item Each task has an upper limit for completion time and a lower limit for start time, and the resource usage must ensure that the difference between the upper limit of the previous task and the lower limit of the next task stays within a specified range. 
+\item Every task of every job is assigned to a machine (completion constraint). 
+\item There is no resource contention between any two tasks (conflict constraint).
+ \end{enumerate}
+ 
+Additionally, the following two objectives are considered as the objective functions:
+
+\begin{enumerate} 
+\setcounter{enumi}{8} 
+\item Minimize the total waiting time for resources across all tasks
+\item Minimize the total resource costs
 \end{enumerate}
-また、目的関数として次の二つを考える。
-\begin{enumerate}
-\setcounter{enumi}{8}
-\item 各タスクのリソースの待ち時間の総和を最小化する
-\item リソースコストの総和を最小化する
-\end{enumerate}
+
 
 
 
@@ -157,71 +159,57 @@ $P = \{p_1,p_2,...,p_n\}$はプレースの集合，$T = \{t_1,t_2,...,t_n\}$は
 
 \subsection{Petri net model}
 
-複数資源フローショップスケジューリング問題に対するペトリネットモデルは、Fig. \ref{fig1}のように表現できる。
-Fig. \ref{fig1}では、15個のジョブを省略した形で記載している。
-各ジョブはプレース、トランジションの交互列となるパスで表されている。例えば、Job1に対応するパス$P_{1,1}, T_{1,1}, P_{1,2}, ..., P_{1,4}$は、3種類のタスク（工程）$T_{1,1}, T_{1,2}, T_{1,3}$から構成されており、それぞれ、$R_0$, $R_1$, $R_2$のマシンリソースを必要としている。
-3種類のマシンリソースは、カラートークンとしてマシンID, 処理速度, マシンコストの情報を含む文字列で表されている。ここでは紙面の都合上詳細な説明は省略する。
-このペトリネットモデルのようにドメイン知識さえあれば、わずかなペトリネットの記述のルールに基づいてペトリネットモデルを作成することができる。
+The Petri net model for the multi-resource flow shop scheduling problem can be represented as shown in Fig. \ref{fig1}. In Fig. \ref{fig1}, the representation is simplified by omitting 15 jobs.
 
+Each job is depicted as a path consisting of an alternating sequence of places and transitions. For example, the path corresponding to Job 1, $P_{1,1}, T_{1,1}, P_{1,2}, \ldots, P_{1,4}$, is composed of three types of tasks (operations) $T_{1,1}, T_{1,2}, T_{1,3}$, each requiring machine resources $R_0$, $R_1$, and $R_2$, respectively.
+
+The three types of machine resources are represented as colored tokens, which are strings containing information such as machine ID, processing speed, and machine cost. Due to space constraints, detailed explanations are omitted here.
+
+As demonstrated by this Petri net model, given sufficient domain knowledge, one can construct a Petri net model based on a few simple Petri net description rules.
 %Fig. \ref{fig1}.によるとマシンリソースには処理時間とマシンコストが割り振られているリソースが複数ある．今回は，リソースコストと前のタスクが処理を終え次のタスクが始まるまでの待ち時間を最小化することを目指す．
 
 \subsection{QUBO Formulation}
 
-著者等の既存研究\cite{b2}において、基本的なQUBO定式化の方式を提案している。本稿では、それに基づいて複数資源フローショップスケジューリング問題のペトリネットモデルからの定式化を行う。
+In our previous research \cite{b2}, we proposed a basic approach to QUBO formulation. This paper extends that approach to formulate the multi-resource flow shop scheduling problem from the Petri net model.
 
-ペトリネットの発火規則に従うためには、以下のエネルギー関数をゼロにする必要がある。
-すなわち、$E_{c1}$及び$E_{c2}$ともトランジションの発火にはその入力プレース全てにトークンが配置されている必要があり、かつ、同じ入力プレースで同じトークンを前提に発火を行うことは禁止されているため、その競合状態にある場合には、一つのトランジションの発火のみに当該トークンが利用される必要がある。このようにペトリネットの発火規則から以下のエネルギー関数が生成できる。
-\begin{align}
-E_{c1} &= \sum_{k_1,k_2} \sum_r \sum_{(j_1,j_2)} \sum_i x_{k_1}^{r}(t_{i}^{j_1}) \cdot x_{k_2}^{r}(t_{i}^{j_2}) \label{eqn:presedence}\\
-E_{c2} &= \sum_{k_1,k_2} \sum_{r_1,r_2} \sum_j \sum_i x_{k_1}^{r_1}(t_{i}^{j}) \cdot x_{k_2}^{r_2}(t_{i+1}^{j})  \label{eqn:conflict}
-\end{align}
-一方、本スケジューリング問題は、全てのジョブが完了するまでのタスクの実行計画を作成することであるので、全てのトランジションがただ一度ずつ発火する必要がある。
-これより、以下のエネルギー関数が生成できる。
-\begin{align}
-E_{c3} &= ( 1 - \sum_k \sum_r \sum_j \sum_i x_{k}^{r}(t_{i}^{j}))^2  \label{eqn:allTasks}
+To comply with the firing rules of the Petri net, it is necessary to minimize the following energy functions to zero. Specifically, for both $E_{c1}$ and $E_{c2}$, a transition can only fire if all tokens are present in its input places. Additionally, firing multiple transitions based on the same token in a single input place is prohibited. In the case of competing transitions, the token must be utilized by only one transition. Based on these firing rules, the following energy functions can be generated: 
+\begin{align} 
+E_{c1} &= \sum_{k_1,k_2} \sum_r \sum_{(j_1,j_2)} \sum_i x_{k_1}^{r}(t_{i}^{j_1}) \cdot x_{k_2}^{r}(t_{i}^{j_2}) \label{eqn:c1}\\ 
+E_{c2} &= \sum_{k_1,k_2} \sum_{r_1,r_2} \sum_j \sum_i x_{k_1}^{r_1}(t_{i}^{j}) \cdot x_{k_2}^{r_2}(t_{i+1}^{j}) \label{eqn:c2} 
 \end{align}
 
-目的関数として、リソースの総コストの最小化とタスクの処理の待ち時間の最小化となるため、ペトリネットの振る舞いモデルより以下のエネルギー関数が導かれる。
-\begin{align}
-E_{o1} &=\sum_k \sum_r \sum_j \sum_i rc^r \cdot fd^r \cdot x_{k}^{r}(t_{i}^{j}) \label{eqn:totalCost}\\
-E_{o2} &= \sum_i \sum_{k_1,k_2} \sum_{r_1,r_2} \sum_j \sum_i ({k_1 - fd^{r_2}}) \cdot x_{k_2}^{r_2}(t_{i+1}^{j}) \cdot x_{k_1}^{r_1}(t_{i}^{j}) \label{eqn:waitingTime}
+On the other hand, since the scheduling problem aims to create an execution plan for tasks until all jobs are completed, each transition must fire exactly once. Therefore, the following energy function can be generated: 
+
+\begin{align} 
+E_{c3} &= \left( 1 - \sum_k \sum_r \sum_j \sum_i x_{k}^{r}(t_{i}^{j}) \right)^2 \label{eqn:c3} 
 \end{align}
 
-
-式(\ref{eqn:presedence}),(\ref{eqn:conflict}),(\ref{eqn:allTasks}),(\ref{eqn:totalCost}),(\ref{eqn:waitingTime})に重み$A$, $B$, $C$, $D$, $E$を乗じてまとめた全体のエネルギー関数は以下のようになる．
-\begin{align}
-E = 
-&A \cdot E_{c1} + B \cdot E_{c2} + C \cdot E_{c3} + D \cdot E_{o1} + E \cdot E_{o2}
+As the objective function is to minimize the total resource cost and the waiting time for task processing, the following energy functions can be derived from the behavior model of the Petri net: 
+\begin{align} 
+E_{o1} &= \sum_k \sum_r \sum_j \sum_i rc^r \cdot fd^r \cdot x_{k}^{r}(t_{i}^{j}) \label{eqn:o1}\\
+E_{o2} &= \sum_i \sum_{k_1,k_2} \sum_{r_1,r_2} \sum_j \sum_i \left( k_1 - fd^{r_2} \right) \cdot x_{k_2}^{r_2}(t_{i+1}^{j}) \cdot x_{k_1}^{r_1}(t_{i}^{j}) \label{eqn:o2} 
 \end{align}
 
-これらの式で用いた変数をTABLE \ref{variable}にまとめる．
+By assigning weights $A$, $B$, $C$, $D$, and $E$ to the energy functions in equations (\ref{eqn:c1}), (\ref{eqn:c2}), (\ref{eqn:c3}), (\ref{eqn:o1}), and (\ref{eqn:o2}), the overall energy function can be expressed as follows: 
+\begin{align} 
+E = &A \cdot E_{c1} + B \cdot E_{c2} + C \cdot E_{c3} \ &+ D \cdot E_{o1} + E \cdot E_{o2} 
+\end{align}
 
-\begin{table}[h]
-\centering
-\caption{Variables in Energy Function}
-\begin{tabularx}{0.45\textwidth}{>{\centering\arraybackslash}p{1.7cm}|X}
-\hline
-変数名 & 定義 \\ \hline 
-$i$ & 何番目のタスクかを示す  \\ 
- & \\
-$r$ & マシンリソースの名称 \\ 
- & \\
-$j$ & 何番目のジョブかを示す \\ 
- & \\
-$k$ & マシンリソースを番号付けした値 \\ 
- & \\
-$rc^r$ & 使用したマシンリソース$r$にかかるコスト  \\ 
- & \\
-$fd^r$ & 使用したマシンリソース$r$にかかる処理時間  \\ 
- & \\
-$k$ & 各タスクの処理における下限時間と上限時間の間をとる時間  \\ 
- & \\
-$t_{i}^{j}$ & ジョブ$j$の$i$番目のタスク  \\ 
- & \\
- $x_{k}^{r}(t_{i}^{j})$ & $t_{i}^{j}$が時刻$k$でマシンリソース$r$を使用したときに$x_{k}^{r}(t_{i}^{j})=1$，それ以外は0を示すバイナリ変数 \\ \hline
+The variables used in these equations are summarized in TABLE \ref{variable}.
 
-\end{tabularx}
-\label{variable}
+\begin{table}[h] 
+\centering 
+\caption{Simbols in Energy Functions} 
+\begin{tabularx}{0.45\textwidth}{>{\centering\arraybackslash}p{1.7cm}X} 
+\hline 
+Symbol  & Explanation \\ \hline 
+$rc^r$ & Cost of using machine resource $r$ per unit time  \\
+$fd^r$ & Processing time when using machine resource $r$ to process a task \\
+$t_{i}^{j}$ & The $i$-th task of job $j$  \\
+$x_{k}^{r}(t_{i}^{j})$ & Binary variable indicating $x_{k}^{r}(t_{i}^{j})=1$ if $t_{i}^{j}$ uses machine resource $r$ at time $k$, otherwise 0 \\ \hline
+
+\end{tabularx} 
+\label{variable} 
 \end{table}
 
 
@@ -233,71 +221,56 @@ $t_{i}^{j}$ & ジョブ$j$の$i$番目のタスク  \\
 \end{figure}
 
 
+\section{Computational Examples} 
+Optimization calculations were conducted using OpenJIJ. The experimental environment is configured as follows:
 
-\section{Computational Examples}
-\subsection{Environments}
-ハードウェア構成
-\begin{itemize}
-\item CPU：Apple M1 3.2 GHz
-\item メモリ：8 GB RAM
+Hardware Environments 
+\begin{itemize} 
+\item CPU: Apple M1 3.2 GHz 
+\item Memory: 8 GB RAM 
 \end{itemize}
 
-\vspace{\baselineskip}
-
-ソフトウェア構成 
-\begin{itemize}
-\item OS：macOS Sonoma 14.3.1
-\item プログラミング言語とライブラリ：Python 3.10.14，openjij 0.9.2，pyqubo 1.4.0
+OS and Libraries: 
+\begin{itemize} 
+\item OS: macOS Sonoma 14.3.1 
+\item Programming Language and Libraries: Python 3.10.14, openjij 0.9.2, pyqubo 1.4.0 
 \end{itemize}
 
+The weight parameters $A$, $B$, and $C$ for the constraints (\ref{eqn:c1}), (\ref{eqn:c2}), and (\ref{eqn:c3}) were fixed at 600, 150, and 250, respectively, based on prior adjustments. Evaluation experiments were conducted by varying only the weight parameters $D$ and $E$ of the two objective functions (\ref{eqn:o1}) and (\ref{eqn:o2}). 
+For each of the 30 different combinations of $D$ and $E$, optimization calculations were performed 20 times, and the average data was obtained using only the feasible solutions. 
+Additionally, the probability of obtaining a feasible solution was calculated from the 20 runs.
 
+The energy diagram of the objective functions when fixing $D$ to one of the values in ${1, 5, 8, 10, 13}$ and varying the parameter $E$ is shown below.
 
-\subsection{評価指標}
-評価指標として，複数のハイパーパラメータで計算を行うことによる解の質や実行可能解を得る確率の変動がある．
-
-解の質は， ハイパーパラメータの設定により最適解の探索バランスが変わり解の質が変動する．
-
-実行可能解を得る確率は， トレードオフの関係により目標の重みが大きいと実行可能解の確率が低下する可能性がある．
-\subsection{評価方法}
-実験は目的関数のハイパーパラメータのみを調整する手法を行う．30パターンそれぞれにおいて20回ずつ実行計算を行い実行可能解が得られたデータのみで平均のデータを取る．また，20回実行したうち実行可能解が得られた確率を求める．
-
-今回使用したパラメータをTABLE \ref{parameter}に示す．
-
-\subsection{結果}
-$D=\{1,5,8,10,13\}$と固定させ，$E$のパラメータを変更させた時の目的関数のエネルギー図を以下に示す．
-%Eを固定した場合のグラフもplotしたいけどパターンが多いから図が増えてしまうなー
 \begin{figure}[htbp]
 \centerline{\includegraphics[scale=0.4]{./fig/D.pdf}}
-\caption{$D$を固定したときのresource costとwaiting timeのエネルギー図}
+\caption{Energy Value for Resource Cost and Waiting Time}
 \label{fig2}
 \end{figure}
 
-
-
-\begin{table}[h]
-    \centering
-    \caption{実行可能解を得ることができた確率}
-    \label{feasible}
-    \begin{tabular}{|c|c|c|c|}
-        \hline
-        $(D,E)$ & success[\%] & $(D,E)$ & success[\%] \\ \hline
-        (1,1) & 100 & (8,30) & 70 \\ \hline
-        (1,10) & 95 & (8,40) & 90 \\ \hline
-        (1,20) & 100 & (8,50) & 80 \\ \hline
-        (1,30) & 100 & (10,1) & 60 \\ \hline
-        (1,40) & 100 & (10,10) & 65 \\ \hline
-        (1,50) & 100 & (10,20) & 100 \\ \hline
-        (5,1) & 65 & (10,30) & 90 \\ \hline
-        (5,10) & 45 & (10,40) & 80 \\ \hline
-        (5,20) & 65 & (10,50) & 90 \\ \hline
-        (5,30) & 75 & (13,1) & 100 \\ \hline
-        (5,40) & 70 & (13,10) & 85 \\ \hline
-        (5,50) & 90 & (13,20) & 90 \\ \hline
-        (8,1) & 55 & (13,30) & 100 \\ \hline
-        (8,10) & 60 & (13,40) & 100 \\ \hline
-        (8,20) & 75 & (13,50) & 100 \\ \hline
-    \end{tabular}
-\end{table}
+\begin{table}[h] 
+\centering 
+\caption{Probability of Obtaining Feasible Solutions} 
+\label{feasible} 
+\begin{tabular}{|c|c|c|c|} \hline 
+$(D,E)$ & success[\%] & $(D,E)$ & success[\%] \\ \hline 
+(1,1) & 100 & (8,30) & 70 \\ \hline 
+(1,10) & 95 & (8,40) & 90 \\ \hline 
+(1,20) & 100 & (8,50) & 80 \\ \hline 
+(1,30) & 100 & (10,1) & 60 \\ \hline 
+(1,40) & 100 & (10,10) & 65 \\ \hline 
+(1,50) & 100 & (10,20) & 100 \\ \hline 
+(5,1) & 65 & (10,30) & 90 \\ \hline
+ (5,10) & 45 & (10,40) & 80 \\ \hline
+ (5,20) & 65 & (10,50) & 90 \\ \hline
+ (5,30) & 75 & (13,1) & 100 \\ \hline 
+ (5,40) & 70 & (13,10) & 85 \\ \hline
+ (5,50) & 90 & (13,20) & 90 \\ \hline
+ (8,1) & 55 & (13,30) & 100 \\ \hline
+ (8,10) & 60 & (13,40) & 100 \\ \hline 
+ (8,20) & 75 & (13,50) & 100 \\ \hline
+ \end{tabular} 
+ \end{table}
 
 
 %パレートフロントもplotしてみた
@@ -307,18 +280,20 @@ $D=\{1,5,8,10,13\}$と固定させ，$E$のパラメータを変更させた時�
 %\label{fig6}
 %\end{figure}
 
-TABLE \ref{feasible}よりパラメータ$E$の値が大きくなるにつれて成功率が高くなる傾向が見られる．
+As observed from TABLE \ref{feasible}, there is a tendency for the success rate to increase as the value of parameter $E$ increases.
 
-Fig. \ref{fig2}.よりパラメータ$E$がの値が大きくなるにつれ実線の$E_{o1}$が小さくなっていくことが確認できた．また，パラメータ$D$の値が大きいと破線の$E_{o2}$のエネルギーが低くなり柔軟なリソース配分が可能であることを示している．
+From Fig. \ref{fig2}, it can be confirmed that as the value of parameter $E$ increases, the dashed line corresponding to $E_{o2}$ decreases. Additionally, when the value of parameter $D$ is large, the solid line corresponding to $E_{o1}$ shows a lower energy, indicating that more flexible resource allocation is possible.
 
-\section{まとめ}
-本研究では，フローショップスケジューリング問題に対してペトリネットを用いてQUBOモデルを定式化した．ジョブ数を15に固定し，異なるパラメータ設定で実行可能解の確率と解の質を評価した．
+%From Fig. \ref{fig2}, it can be confirmed that as the value of parameter $E$ increases, the solid line corresponding to $E_{o1}$ decreases. Additionally, when the value of parameter $D$ is large, the dashed line corresponding to $E_{o2}$ shows a lower energy, indicating that more flexible resource allocation is possible.
+\section{Conclusion}
+In this study, we formulated a QUBO model based on Petri nets to address the flow shop scheduling problem. We fixed the number of jobs at 15. We evaluated not only the probability of obtaining feasible solutions under different parameter settings but also the quality of the solutions to assess the effectiveness of the parameter settings.
 
-その結果，パラメータ $D$ と $E$ の設定が解の質と実行可能性に影響を与えることが示された．制約条件を固定した場合，目的関数のパラメータ設定がスケジューリングの効率化に寄与する可能性があることが示唆された．これにより、解の質と計算のバランスを考慮したパラメータ調整の重要性が確認された．
+The results indicated that the quality of the solutions and the probability of obtaining feasible solutions varied depending on the settings of parameters $D$ and $E$. This suggests that, within the context of the flow shop scheduling problem, the parameter settings of the objective functions can contribute to the efficiency of scheduling, particularly when the constraint parameters are fixed. Consequently, the importance of adjusting parameters to balance solution quality and computational efficiency was demonstrated.
 
 \begin{thebibliography}{00}
-\bibitem{b1} 名嘉村 盛和,"ペトリネットに基づくスケジューリング問題へのアプローチ,'' 2015年2月
-\bibitem{b2} 新城 巧也, "ペトリネットに基づく実用性を考慮した組合せ最適化問題に対する量子インスパイアード最適化,'' 2022年3月
+\bibitem{b1} M. Nakamura, ``An Approach to Scheduling Problems Based on Petri Nets," February 2015
+\bibitem{b2} T. Shinjo, ``Based on Petri nets for practicality-aware combinatorial optimization problems Quantum inspired optimization,'' March 2022
 \end{thebibliography}
+
 
 \end{document}
