@@ -4,7 +4,7 @@
 │
 ├ academic .. 学会用
 │　├ poster.tex
-│　└ fsp.svg
+│　└ fig
 │
 ├ search .. データ取得したやつ
 │  ├ exp.md ハイパーパラメータのパターンの詳細
@@ -30,3 +30,10 @@
 │
 └ draw.py .. plotするコード
 ```
+
+---
+
+**注意事項**
+pyquboはpython 3.6から3.10までしかポートしてない
+openjijはpython 3.8以上
+必要だったら[pyenv](https://qiita.com/koooooo/items/b21d87ffe2b56d0c589b)からlocalの方使って設定して
