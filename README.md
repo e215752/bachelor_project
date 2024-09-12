@@ -26,14 +26,18 @@
 │     ├ 0829
 │     └ 0901
 │
-├ FlowShop_ver1.py .. ソースコード
-│
-└ draw.py .. plotするコード
+├ FlowShop_ver1 .. 手動でパラメータ調整を行ったコード
+│  ├ FlowShop_ver1.py .. あるパラメータの時のデータを取得するコード
+│  ├ draw.py .. FlowShop_ver1.pyを実行した後にplotするコード
+│  └ FlowShop_ver1.ipynb .. FlowShop_ver1.pyとdraw.pyを一つにまとめた
+├ 
 ```
 
 ---
 
 **注意事項**
-pyquboはpython 3.6から3.10までしかポートしてない
-openjijはpython 3.8以上
+
+- pyquboはpython 3.6から3.10までしかポートしてない
+- openjijはpython 3.8以上
+
 必要だったら[pyenv](https://qiita.com/koooooo/items/b21d87ffe2b56d0c589b)からlocalの方使って設定して
