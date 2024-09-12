@@ -93,6 +93,7 @@ plt.grid(True)
 plt.show()
 
 #パレートフロントをplot
+#使わなら参考程度に
 import pandas as pd
 import re
 import matplotlib.pyplot as plt
