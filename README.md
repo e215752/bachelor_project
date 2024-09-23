@@ -3,8 +3,8 @@
 リポジトリTOP
 │
 ├ academic .. 学会用
-│　├ poster.tex
-│　└ fig
+│  ├ poster.tex
+│  └ fig
 │
 ├ FlowShop_ver1 .. 手動でパラメータ調整を行ったコード
 │  ├ FlowShop_ver1.py .. あるパラメータの時のデータを取得するコード
