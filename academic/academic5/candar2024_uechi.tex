@@ -1,0 +1,338 @@
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+% The preceding line is only needed to identify funding in the first footnote. If that is unneeded, please comment it out.
+%Template version as of 6/27/2024
+
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage[dvipdfmx]{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{tabularx}
+\usepackage{multicol}
+
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+\begin{document}
+
+\title{Petri net-based QUBO Model Formulation for Multi-Resource Flow-Shop Scheduling Problems}
+
+
+
+\author{\IEEEauthorblockN{1\textsuperscript{st} Given Name Surname}
+\IEEEauthorblockA{\textit{dept. name of organization (of Aff.)} \\
+\textit{name of organization (of Aff.)}\\
+City, Country \\
+email address or ORCID}
+\and
+\IEEEauthorblockN{2\textsuperscript{nd} Given Name Surname}
+\IEEEauthorblockA{\textit{dept. name of organization (of Aff.) } \\
+\textit{name of organization (of Aff.)}\\
+City, Country \\
+email address or ORCID}
+\and
+\IEEEauthorblockN{3\textsuperscript{rd} Given Name Surname}
+\IEEEauthorblockA{\textit{dept. name of organization (of Aff.)} \\
+\textit{name of organization (of Aff.)}\\
+City, Country \\
+email address or ORCID}
+\and
+\IEEEauthorblockN{4\textsuperscript{th} Given Name Surname}
+\IEEEauthorblockA{\textit{dept. name of organization (of Aff.)} \\
+\textit{name of organization (of Aff.)}\\
+City, Country \\
+email address or ORCID}
+\and
+\IEEEauthorblockN{5\textsuperscript{th} Given Name Surname}
+\IEEEauthorblockA{\textit{dept. name of organization (of Aff.)} \\
+\textit{name of organization (of Aff.)}\\
+City, Country \\
+email address or ORCID}
+
+}
+%\author{\IEEEauthorblockN{Ryota Uechi}
+%\IEEEauthorblockA{\textit{Computer Sciences and Intelligent Systems, Faculty of Eng.,} \\
+%\textit{University of the Ryukyus}\\
+%Okinawa, Japan \\
+%e215752@ie.u-ryukyu.ac.jp}
+%\and
+%\IEEEauthorblockN{ Morikazu Nakamura}
+%\IEEEauthorblockA{\textit{Computer Sciences and Intelligent Systems, Faculty of Eng.,} \\
+%\textit{University of the Ryukyus}\\
+%Okinawa, Japan \\
+%morikazu@ie.u-ryukyu.ac.jp}
+%\and
+%\IEEEauthorblockN{Tadashi Shiroma}
+%\IEEEauthorblockA{\textit{Computer Sciences and Intelligent Systems, Faculty of Eng.,} \\
+%\textit{University of the Ryukyus}\\
+%Okinawa, Japan \\
+%shiroma@ie.u-ryukyu.ac.jp}
+%\and
+%\IEEEauthorblockN{Takayuki Nakachi}
+%\IEEEauthorblockA{\textit{Information Technology Center,} \\
+%\textit{University of the Ryukyus}\\
+%Okinawa, Japan \\
+%takayuki.nakachi@ieee.org}
+%}
+
+
+
+\maketitle
+
+\begin{abstract}
+This paper introduces a Petri net-based approach to addressing multi-resource flow-shop scheduling problems within multi-objective quantum optimization. The multi-resource flow-shop problem, which holds both theoretical and practical significance, represents a real-world application scenario. The practical nature of the problem necessitates incorporating multiple objective functions, which adds complexity to its formulation, particularly in representing the energy function within the QUBO (Quadratic Unconstrained Binary Optimization) model.
+Our approach mitigates the complexity of formulating the QUBO model by employing Petri net theory, providing a more efficient solution for these inherently complex problems. The paper further demonstrates the effectiveness of this method through computational examples utilizing a CPU-based QUBO optimization platform.
+\end{abstract}
+
+\section{Introduction}
+A combinatorial optimization problem involves identifying an optimal solution that either maximizes or minimizes an objective function subject to constraints. Typical instances of such problems include the traveling salesman problem, the knapsack problem, and various scheduling problems. However, many combinatorial optimization problems fall under the category of NP-hard. Consequently, as the number of potential solutions increases exponentially, it becomes challenging to find the optimal solution within a feasible timeframe consistently. To mitigate this challenge, researchers have developed exact algorithms that minimize computational complexity by efficiently narrowing the solution space and heuristic algorithms that efficiently identify feasible solutions that approximate the optimal solution.
+
+Quantum annealing and quantum approximate optimization algorithms (QAOA) represent optimization algorithms designed for quantum computers\cite{qaoa, quantum_annealing}. Both approaches formulate the optimization problem as an energy function, represented either in the QUBO (Quadratic Unconstrained Binary Optimization) model or the Ising model, and are anticipated to generate solutions near the optimal solution efficiently. QAOA, being a quantum gate-based optimization algorithm, requires further advancements in quantum hardware to enable large-scale optimization computations. Conversely, quantum annealing has already seen practical applications, with D-Wave's commercial quantum annealing machine capable of processing tens of thousands of qubits. Additionally, quantum-inspired systems, which perform optimization computations digitally based on the QUBO or Ising model, and systems that emulate annealing processes using GPUs have been proposed. These emerging platforms are gaining attention as novel solutions for combinatorial optimization.
+
+In our previous study, we developed an algorithm to formulate QUBO and Ising models based on Petri net modeling. Our approach can drastically reduce the formulation's hardness because we can model target optimization problems with Petri nets, and it requires only the domain knowledge of the problem.
+This paper examines multi-resource flow shop scheduling problems to minimize the resource costs associated with each task and the waiting time between tasks. Furthermore, the study investigates the extent to which the system can handle an increase in the number of jobs and whether appropriate hyperparameters can be determined under such conditions.
+
+\section{Preriminaries}
+
+\subsection{Petri net}
+A Petri net $PN = (N,M_0)$ is represented by a directed bipartite graph consisting of two types of nodes, places, and transitions, denoted as $N = (P,T,Pre,Post)$, along with an initial marking $M_0$ \cite{murata, cpn}.
+
+$P = \{p_1, p_2, \ldots, p_n\}$ represents the set of places, and $T = \{t_1, t_2, \ldots, t_n\}$ represents the set of transitions. The state of the current system can be represented by the placement of tokens in the places. $Pre(p,t)$ denotes the arc weight that connects the input place $p$ to the transition $t$. $Post(p,t)$ denotes the arc weight that connects the output place $p$ from the transition $t$. A transition $t$ is said to be enabled when the number of tokens in its input places meets or exceeds the weight of the corresponding arcs. The firing of a transition represents the occurrence of an event, which leads to a change in the distribution of tokens.
+
+
+\subsection{Multi-Resource Flow-Shop Scheduling Problem} 
+The multi-resource flow-shop scheduling problem (MRFSSP) is a type of scheduling problem that involves processing multiple jobs, each composed of several operations. 
+Each job is comprised of multiple operations, and each operation requires the use of designated shared resources. A single processing operation within a job is referred to as a task \cite{Nouri}.
+
+The MRFSSP addressed in this paper is summarized as follows:
+
+\begin{enumerate} 
+\item The number of jobs is $N$, and each job consists of $M$ tasks (corresponding to operations). 
+\item The operating cost per unit time is predetermined for each machine. 
+\item The processing time per unit operation length is predetermined for each machine. 
+\item Each job must process $M$ tasks in a specified order, which is the same for all jobs. 
+\item Each task is processed using a machine from a predetermined set of machine resources. Once a task has started, it must be completed without interruption. 
+\item Each task cannot begin processing until the preceding task of the same job is completed (precedence constraint). 
+%\item Each task has an upper limit for completion time and a lower limit for start time, and the resource usage must ensure that the difference between the upper limit of the previous task and the lower limit of the next task stays within a specified range. 
+\item Every task of every job is assigned to a machine (completion constraint). 
+\item There is no resource contention between any two tasks (conflict constraint).
+ \end{enumerate}
+ 
+Additionally, the following two objectives are considered as the objective functions:
+
+\begin{enumerate} 
+\setcounter{enumi}{8} 
+\item Minimize the total waiting time for resources across all tasks
+\item Minimize the total resource costs
+\end{enumerate}
+
+
+
+
+
+%Fig. \ref{fig2}.はトランジションの発火の例である．トランジション$t_1$が発火することでプレース$p_1$に配置されていたトークンがなくなりプレース$p_2,p_3$に配置される．5個のプレースと2個のトランジションをアークで接続したペトリネットモデルであり以下に示す式で表現できる．
+%
+%\begin{figure}[htbp]
+%\centerline{\includegraphics[scale=0.3]{./fig/fire.pdf}}
+%\caption{トランジションの発火によるトークン分布の変化}
+%\label{fig2}
+%\end{figure}
+
+%\begin{align}
+%PN &= (N,M_0) \\
+%N &= (P,T,Pre,Post) \\
+%P &= \{p_1,p_2,p_3,p_4.p_5\} \\
+%T &= \{t_1,t_2\} \\
+%M_0^T &= (1,0,0,0,0) \\
+%Pre^T &=
+%\begin{bmatrix}
+%  1 & 0 & 0 & 0 & 0 \\
+%  0 & 1 & 1 & 0 & 0
+%\end{bmatrix} \\
+%Post^T &=
+%\begin{bmatrix}
+%  0 & 1 & 1 & 0 & 0 \\
+%  0 & 0 & 0 & 1 & 1  
+%\end{bmatrix}
+%\end{align}
+%
+%あるステップ$k$から次の状態変化を定式化することができる．
+%
+%\begin{align}
+%M_{k+1} = M_k + (Post - Pre) \cdot X_k
+%\end{align}
+%
+%ここで，$X_k$はトランジションの発火回数を表すベクトルである．$t_1$が発火することにより状態が変化していることを次のように計算できる．
+%
+%$$
+%M_1 = M_0 + 
+%\begin{bmatrix}
+%  -1 & 0 \\
+%  1 & -1 \\
+%  1 & -1 \\
+%  0 & 1 \\
+%  0 & 1
+%\end{bmatrix}
+%\cdot 
+%\begin{bmatrix}
+%  1 \\
+%  0
+%\end{bmatrix}
+%= 
+%\begin{bmatrix}
+%  0 \\
+%  1 \\
+%  1 \\
+%  0 \\
+%  0
+%\end{bmatrix}
+%$$
+
+
+
+\section{Petri net-based QUBO Formulation for MRFSSP}
+
+\subsection{Petri Net Model}
+
+The Petri net model for the multi-resource flow shop scheduling problem can be represented as shown in Fig. \ref{fig:fig1}. Fig. \ref{fig:fig1} simplifies the representation by showing just three jobs.
+
+Each job is depicted as a path consisting of an alternating sequence of places and transitions. For example, the path corresponding to Job 1, $P_{1,1}, T_{1,1}, P_{1,2}, \ldots, P_{1,4}$, is composed of three types of tasks (operations) $T_{1,1}, T_{1,2}, T_{1,3}$, each requiring machine resources $R_0$, $R_1$, and $R_2$, respectively.
+
+The three types of machine resources are represented as colored tokens, strings containing information such as machine ID, processing speed, and machine cost. Due to space constraints, detailed explanations are omitted here.
+
+As demonstrated by this Petri net model, given sufficient domain knowledge, one can construct a Petri net model based on a few simple Petri net description rules.
+%Fig. \ref{fig1}.によるとマシンリソースには処理時間とマシンコストが割り振られているリソースが複数ある．今回は，リソースコストと前のタスクが処理を終え次のタスクが始まるまでの待ち時間を最小化することを目指す．
+
+\subsection{QUBO Formulation}
+
+In our previous research, we proposed a basic approach to QUBO formulation. This paper applies our approach to formulate the MRFSSP from the Petri net model.
+
+The variables used in these equations are summarized in TABLE \ref{variable}.
+\begin{table}[h] 
+\centering 
+\caption{Simbols in Energy Functions} 
+\begin{tabularx}{0.45\textwidth}{>{\centering\arraybackslash}p{1.7cm}X} 
+\hline 
+Symbol  & Explanation \\ \hline 
+$rc^r$ & Cost of using machine resource $r$ per unit time  \\
+$fd^r$ & Processing time when using machine resource $r$ to process a task \\
+$t_{i}^{j}$ & The $i$-th task of job $j$  \\
+$x_{k}^{r}(t_{i}^{j})$ & Binary variable indicating $x_{k}^{r}(t_{i}^{j})=1$ if $t_{i}^{j}$ uses machine resource $r$ at time $k$, otherwise 0 \\ \hline
+
+\end{tabularx} 
+\label{variable} 
+\end{table}
+
+To comply with the firing rules of the Petri net, it is necessary to minimize the following energy functions to zero. Specifically, for both $E_{c1}$ and $E_{c2}$, a transition can only fire if all tokens are present in its input places. Additionally, firing multiple transitions based on the same token in a single input place is prohibited. In the case of competing transitions, the token must be utilized by only one transition. Based on these firing rules, the following energy functions can be generated: 
+\begin{align} 
+E_{c1} &= \sum_{k_1,k_2} \sum_r \sum_{(j_1,j_2)} \sum_i x_{k_1}^{r}(t_{i}^{j_1}) \cdot x_{k_2}^{r}(t_{i}^{j_2}) \label{eqn:c1}\\ 
+E_{c2} &= \sum_{k_1,k_2} \sum_{r_1,r_2} \sum_j \sum_i x_{k_1}^{r_1}(t_{i}^{j}) \cdot x_{k_2}^{r_2}(t_{i+1}^{j}) \label{eqn:c2} 
+\end{align}
+
+On the other hand, since the scheduling problem aims to create an execution plan for tasks until all jobs are completed, each transition must fire exactly once. Therefore, the following energy function can be generated: 
+
+\begin{align} 
+E_{c3} &= \left( 1 - \sum_k \sum_r \sum_j \sum_i x_{k}^{r}(t_{i}^{j}) \right)^2 \label{eqn:c3} 
+\end{align}
+
+As the objective function is to minimize the total resource cost and the waiting time for task processing, the following energy functions can be derived from the behavior model of the Petri net: 
+\begin{align} 
+E_{o1} &= \sum_k \sum_r \sum_j \sum_i rc^r \cdot fd^r \cdot x_{k}^{r}(t_{i}^{j}) \label{eqn:o1}\\
+E_{o2} &= \sum_i \sum_{k_1,k_2} \sum_{r_1,r_2} \sum_j \sum_i \left( k_1 - fd^{r_2} \right) \cdot x_{k_2}^{r_2}(t_{i+1}^{j}) \cdot x_{k_1}^{r_1}(t_{i}^{j}) \label{eqn:o2} 
+\end{align}
+
+By assigning weights $A$, $B$, $C$, $D$, and $E$ to the energy functions in equations (\ref{eqn:c1}), (\ref{eqn:c2}), (\ref{eqn:c3}), (\ref{eqn:o1}), and (\ref{eqn:o2}), the overall energy function can be expressed as follows: 
+\begin{align} 
+E = &A \cdot E_{c1} + B \cdot E_{c2} + C \cdot E_{c3} \ + D \cdot E_{o1} + E \cdot E_{o2} 
+\end{align}
+
+
+
+
+
+\begin{figure}[htbp]
+\centerline{\includegraphics[scale=0.3]{./fig/fsp.pdf}}
+\caption{Petri net model of a flow-shop system}
+\label{fig:fig1}
+\end{figure}
+
+
+\section{Computational Evaluation} 
+Optimization calculations were conducted using OpenJij. The experimental environment is configured as follows:
+
+Hardware Environments 
+\begin{itemize} 
+\item CPU: Apple M1 3.2 GHz 
+\item Memory: 8 GB RAM 
+\end{itemize}
+
+OS and Libraries: 
+\begin{itemize} 
+\item OS: macOS Sonoma 14.3.1 
+\item Programming Language and Libraries: Python 3.10.14, openjij 0.9.2, pyqubo 1.4.0 
+\end{itemize}
+
+The weight parameters $A$, $B$, and $C$ for the constraints (\ref{eqn:c1}), (\ref{eqn:c2}), and (\ref{eqn:c3}) were fixed at 600, 150, and 250, respectively, based on prior adjustments. Evaluation experiments were conducted by varying only the weight parameters $D$ and $E$ of the two objective functions (\ref{eqn:o1}) and (\ref{eqn:o2}). 
+For each of the 30 different combinations of $D$ and $E$, optimization calculations were performed 20 times, and the average data was obtained using only the feasible solutions. 
+Additionally, the probability of obtaining a feasible solution was calculated from the 20 runs.
+
+The energy diagram of the objective functions when fixing $D$ to one of the values in ${1, 5, 8, 10, 13}$ and varying the parameter $E$ is shown in Fig. \ref{fig:fig2}.
+
+\begin{figure}[htbp]
+\centerline{\includegraphics[scale=0.4]{./fig/D5.pdf}}
+\caption{Energy Value for Resource Cost and Waiting Time}
+\label{fig:fig2}
+\end{figure}
+
+\begin{table}[h] 
+\centering 
+\caption{Probability of Obtaining Feasible Solutions} 
+\label{feasible} 
+\begin{tabular}{|c|c|c|c|} \hline 
+$(D,E)$ & success[\%] & $(D,E)$ & success[\%] \\ \hline 
+(1,1) & 100 & (8,30) & 70 \\ \hline 
+(1,10) & 95 & (8,40) & 90 \\ \hline 
+(1,20) & 100 & (8,50) & 80 \\ \hline 
+(1,30) & 100 & (10,1) & 60 \\ \hline 
+(1,40) & 100 & (10,10) & 65 \\ \hline 
+(1,50) & 100 & (10,20) & 100 \\ \hline 
+(5,1) & 65 & (10,30) & 90 \\ \hline
+ (5,10) & 45 & (10,40) & 80 \\ \hline
+ (5,20) & 65 & (10,50) & 90 \\ \hline
+ (5,30) & 75 & (13,1) & 100 \\ \hline 
+ (5,40) & 70 & (13,10) & 85 \\ \hline
+ (5,50) & 90 & (13,20) & 90 \\ \hline
+ (8,1) & 55 & (13,30) & 100 \\ \hline
+ (8,10) & 60 & (13,40) & 100 \\ \hline 
+ (8,20) & 75 & (13,50) & 100 \\ \hline
+ \end{tabular} 
+ \end{table}
+
+
+%パレートフロントもplotしてみた
+%\begin{figure}[htbp]
+%\centerline{\includegraphics[scale=0.3]{./fig/Figure1.pdf}}
+%\caption{全体のデータに対するパレートフロント}
+%\label{fig6}
+%\end{figure}
+
+
+From Fig. \ref{fig:fig2}, it can be confirmed that as parameter $E$ increases, the dashed line corresponding to $E_{o2}$ decreases. Additionally, when the value of parameter $D$ is large, the solid line corresponding to $E_{o1}$ shows lower energy, indicating that more flexible resource allocation is possible.
+
+As observed from TABLE \ref{feasible}, there is a tendency for the success rate to increase as the value of parameter $E$ increases.
+
+
+%From Fig. \ref{fig2}, it can be confirmed that as the value of parameter $E$ increases, the solid line corresponding to $E_{o1}$ decreases. Additionally, when the value of parameter $D$ is large, the dashed line corresponding to $E_{o2}$ shows a lower energy, indicating that more flexible resource allocation is possible.
+
+
+\section{Conclusion}
+In this study, we formulated a QUBO model based on Petri nets to address the flow shop scheduling problem. We fixed the number of jobs at 15. We evaluated not only the probability of obtaining feasible solutions under different parameter settings but also the quality of the solutions to assess the effectiveness of the parameter settings.
+
+The results indicated that the quality of the solutions and the probability of obtaining feasible solutions varied depending on the settings of parameters $D$ and $E$. This suggests that, within the context of the flow shop scheduling problem, the parameter settings of the objective functions can contribute to the efficiency of scheduling, particularly when the constraint parameters are fixed. Consequently, the importance of adjusting parameters to balance solution quality and computational efficiency was demonstrated.
+
+
+\bibliographystyle{junsrt}
+\bibliography{candar2024_uechi}
+
+\end{document}

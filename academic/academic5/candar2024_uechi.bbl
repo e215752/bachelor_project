@@ -1,0 +1,32 @@
+\begin{thebibliography}{1}
+
+\bibitem{qaoa}
+Bingzhi Zhang, Akira Sone, and Quntao Zhuang.
+\newblock Quantum computational phase transition in combinatorial problems.
+\newblock {\em npj Quantum Information}, Vol.~8, No.~1, p.~87, 2022.
+
+\bibitem{quantum_annealing}
+Tadashi Kadowaki and Hidetoshi Nishimori.
+\newblock Quantum annealing in the transverse ising model.
+\newblock {\em Phys. Rev. E}, Vol.~58, pp. 5355--5363, Nov 1998.
+
+\bibitem{murata}
+T.~{Murata}.
+\newblock Petri nets: Properties, analysis and applications.
+\newblock {\em Proceedings of the IEEE}, Vol.~77, No.~4, pp. 541--580, 1989.
+
+\bibitem{cpn}
+Kurt Jensen, Lars~Michael Kristensen, and Lisa Wells.
+\newblock {Coloured Petri Nets and CPN Tools for modelling and validation of
+  concurrent systems}.
+\newblock {\em International Journal on Software Tools for Technology
+  Transfer}, Vol.~9, No.~3, pp. 213--254, 2007.
+
+\bibitem{Nouri}
+Houssem~Eddine Nouri, Olfa Belkahla~Driss, and Khaled Gh{\'e}dira.
+\newblock Solving the flexible job shop problem by hybrid metaheuristics-based
+  multiagent model.
+\newblock {\em Journal of Industrial Engineering International}, Vol.~14,
+  No.~1, pp. 1--14, 2018.
+
+\end{thebibliography}
