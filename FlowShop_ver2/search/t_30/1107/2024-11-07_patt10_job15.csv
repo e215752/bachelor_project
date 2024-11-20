@@ -1,0 +1,21 @@
+iteration,resource_cost,waiting_time,feasible
+100,834.0,0.0,"{'one_fired_t93': (False, 1.0), 'one_fired_t41': (False, 1.0), 'one_fired_t91': (False, 1.0)}"
+100,836.0,0.0,"{'one_fired_t41': (False, 1.0), 'one_fired_t81': (False, 1.0), 'one_fired_t91': (False, 1.0)}"
+100,884.0,0.0,0
+100,864.0,0.0,"{'one_fired_t61': (False, 1.0), 'one_fired_t41': (False, 1.0)}"
+100,854.0,0.0,"{'one_fired_t41': (False, 1.0), 'one_fired_t81': (False, 1.0), 'one_fired_t91': (False, 1.0)}"
+100,884.0,0.0,0
+100,814.0,0.0,"{'one_fired_t93': (False, 1.0), 'one_fired_t83': (False, 1.0), 'one_fired_t91': (False, 1.0)}"
+100,874.0,0.0,"{'one_fired_t41': (False, 1.0)}"
+100,826.0,0.0,"{'one_fired_t61': (False, 1.0), 'one_fired_t41': (False, 1.0), 'one_fired_t81': (False, 1.0), 'one_fired_t91': (False, 1.0)}"
+100,844.0,0.0,"{'one_fired_t61': (False, 1.0), 'one_fired_t41': (False, 1.0), 'one_fired_t81': (False, 1.0), 'one_fired_t91': (False, 1.0)}"
+100,844.0,0.0,"{'one_fired_t41': (False, 1.0), 'one_fired_t43': (False, 1.0)}"
+100,854.0,0.0,"{'one_fired_t83': (False, 1.0)}"
+100,854.0,0.0,"{'one_fired_t83': (False, 1.0)}"
+100,854.0,0.0,"{'one_fired_t43': (False, 1.0)}"
+100,884.0,0.0,0
+100,836.0,0.0,"{'one_fired_t41': (False, 1.0), 'one_fired_t81': (False, 1.0), 'one_fired_t91': (False, 1.0)}"
+100,836.0,0.0,"{'one_fired_t41': (False, 1.0), 'one_fired_t81': (False, 1.0), 'one_fired_t91': (False, 1.0)}"
+100,854.0,0.0,"{'one_fired_t41': (False, 1.0), 'one_fired_t81': (False, 1.0), 'one_fired_t91': (False, 1.0)}"
+100,826.0,0.0,"{'one_fired_t61': (False, 1.0), 'one_fired_t41': (False, 1.0), 'one_fired_t81': (False, 1.0), 'one_fired_t91': (False, 1.0)}"
+100,844.0,0.0,"{'one_fired_t41': (False, 1.0), 'one_fired_t141': (False, 1.0), 'one_fired_t81': (False, 1.0), 'one_fired_t91': (False, 1.0)}"
