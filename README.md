@@ -6,7 +6,7 @@
 │　├ poster.tex
 │　└ fig
 │
-├ FlowShop_ver1 .. 手動でパラメータ調整を行ったコード
+├ FlowShop_ver1 .. 手動でパラメータ調整を行ったコード(これは使わない、とりあえず置いとく)
 │  ├ FlowShop_ver1.py .. あるパラメータの時のデータを取得するコード
 │  ├ draw.py .. FlowShop_ver1.pyを実行した後にplotするコード
 │  ├ FlowShop_ver1.ipynb .. FlowShop_ver1.pyとdraw.pyを一つにまとめた
