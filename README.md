@@ -14,7 +14,7 @@
 │    ├ t_30 .. time=30としたときのデータ
 │    └ plots .. plotした図
 │
-└  FlowShop_ver2 .. モデルの分割後のコード
+└ FlowShop_ver2 .. モデルの分割後のコード
    ├ FSP.cpn .. cpntoolsでモデル表現したファイル
    ├ FSP.xml .. cpntoolsでモデル表現したxmlファイル
    ├ FlowShop_ver2.ipynb
