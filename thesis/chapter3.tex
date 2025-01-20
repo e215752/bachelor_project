@@ -1,0 +1,279 @@
+\chapter{関連研究}
+\label{chap:poordirection}
+量子インスパイアード最適化の論文\cite{shinjo}の定式化を参考にMRFSSPの各タスクのリソースコストとタスク間の待機時間の最適化を図る検証を行った．
+\section{多資源フローショップスケジューリング問題}
+
+\subsection{ペトリネットモデル}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\linewidth, height=8cm]{./images/fsp.png}
+    \caption{フローショップシステムのペトリネットモデル}
+    \label{fig:fig1}
+\end{figure}
+
+MRFSSPに対するペトリネットモデルは，図\ref{fig:fig1}のように表現できる．図\ref{fig:fig1}では，15個のジョブを省略した形で記載している．各ジョブはプレース，トランジションの交互列となるパスで表されている．例えば，Job1に対するパス$P_{1,1}, T_{1,1}, P_{1,2}, ..., P_{1,4}$は，3種類のタスク(工程)$T_{1,1}, T_{1,2}, T_{1,3}$から構成されており，それぞれ，$R_0, R_1, R_2$のマシンリソースを必要としている．3種類のマシンリソースは，カラートークンとしてマシンID，処理速度，マシンコストの情報を含む文字列で表されている．ここでは紙面の都合上詳細な説明は省略する．このペトリネットモデルのようにドメイン知識さえあれば，わずかなペトリネットの記述のルールに基づいてペトリネットモデルを作成することができる．
+
+\subsection{CPNToolsによるモデル生成}
+CPNToolsは，カラードペトリネットのモデリングおよびシミュレーションを支援するツールである．本研究では，CPNToolsを用いて生成したペトリネットモデルをXML形式でエクスポートすることで，プレース，アーク，トランジションに関する構造情報および動作情報を取得できる．
+
+プレース，トランジション，アークのXMLファイルの一部を以下に示す．
+
+\lstset{
+  basicstyle={\ttfamily},
+  identifierstyle={\small},
+  commentstyle={\smallitshape},
+  keywordstyle={\small\bfseries},
+  ndkeywordstyle={\small},
+  stringstyle={\small\ttfamily},
+  frame={tb},
+  breaklines=true,
+  columns=[l]{fullflexible},
+  numbers=left,
+  xrightmargin=0zw,
+  xleftmargin=3zw,
+  numberstyle={\scriptsize},
+  stepnumber=1,
+  numbersep=1zw,
+  lineskip=-0.5ex
+}
+\begin{lstlisting}[caption=プレースのXMLファイル,label=cpn_place]
+<place id="ID1412324394">
+        <posattr x="-284.000000"
+                 y="42.000000"/>
+        <fillattr colour="White"
+                  pattern=""
+                  filled="false"/>
+        <lineattr colour="Black"
+                  thick="1"
+                  type="Solid"/>
+        <textattr colour="Black"
+                  bold="false"/>
+        <text>p_11</text>
+        <ellipse w="60.000000"
+                 h="40.000000"/>
+        <token x="-10.000000"
+               y="0.000000"/>
+        <marking x="0.000000"
+                 y="0.000000"
+                 hidden="false">
+          <snap snap_id="0"
+                anchor.horizontal="0"
+                anchor.vertical="0"/>
+        </marking>
+        <type id="ID1412324395">
+          <posattr x="-244.000000"
+                   y="18.000000"/>
+          <fillattr colour="White"
+                    pattern="Solid"
+                    filled="false"/>
+          <lineattr colour="Black"
+                    thick="0"
+                    type="Solid"/>
+          <textattr colour="Black"
+                    bold="false"/>
+          <text tool="CPN Tools"
+                version="4.0.1">UNIT</text>
+        </type>
+        <initmark id="ID1412324396">
+          <posattr x="-255.000000"
+                   y="65.000000"/>
+          <fillattr colour="White"
+                    pattern="Solid"
+                    filled="false"/>
+          <lineattr colour="Black"
+                    thick="0"
+                    type="Solid"/>
+          <textattr colour="Black"
+                    bold="false"/>
+          <text tool="CPN Tools"
+                version="4.0.1">1`()</text>
+        </initmark>
+      </place>
+\end{lstlisting}
+
+Listing \ref{cpn_place}は，プレースに関する情報であり＜place id＞はアークとの関連付けに使用するためのユニークなIDである．＜text＞プレース＜/text＞はプレースのラベルが指定されており人間が理解しやすい形になっている．＜initmark id＞はトークンのユニークなIDであり＜text tool＞トークンの数‘()＜/text＞で初期状態でのトークンの数を表している．
+
+\begin{lstlisting}[caption=トランジションのXMLファイル,label=cpn_transition]
+<trans id="ID1412324537"
+             explicit="false">
+        <posattr x="-138.000000"
+                 y="42.000000"/>
+        <fillattr colour="White"
+                  pattern=""
+                  filled="false"/>
+        <lineattr colour="Black"
+                  thick="1"
+                  type="solid"/>
+        <textattr colour="Black"
+                  bold="false"/>
+        <text>t_11</text>
+        <box w="60.000000"
+             h="38.000000"/>
+        <binding x="7.200000"
+                 y="-3.000000"/>
+        <cond id="ID1412324538">
+          <posattr x="-177.000000"
+                   y="72.000000"/>
+          <fillattr colour="White"
+                    pattern="Solid"
+                    filled="false"/>
+          <lineattr colour="Black"
+                    thick="0"
+                    type="Solid"/>
+          <textattr colour="Black"
+                    bold="false"/>
+          <text tool="CPN Tools"
+                version="4.0.1"/>
+        </cond>
+        <time id="ID1412324539">
+          <posattr x="-93.500000"
+                   y="72.000000"/>
+          <fillattr colour="White"
+                    pattern="Solid"
+                    filled="false"/>
+          <lineattr colour="Black"
+                    thick="0"
+                    type="Solid"/>
+          <textattr colour="Black"
+                    bold="false"/>
+          <text tool="CPN Tools"
+                version="4.0.1"/>
+        </time>
+        <code id="ID1412324540">
+          <posattr x="-73.500000"
+                   y="-9.000000"/>
+          <fillattr colour="White"
+                    pattern="Solid"
+                    filled="false"/>
+          <lineattr colour="Black"
+                    thick="0"
+                    type="Solid"/>
+          <textattr colour="Black"
+                    bold="false"/>
+          <text tool="CPN Tools"
+                version="4.0.1"/>
+        </code>
+        <priority id="ID1412324542">
+          <posattr x="-206.000000"
+                   y="12.000000"/>
+          <fillattr colour="White"
+                    pattern="Solid"
+                    filled="false"/>
+          <lineattr colour="Black"
+                    thick="0"
+                    type="Solid"/>
+          <textattr colour="Black"
+                    bold="false"/>
+          <text tool="CPN Tools"
+                version="4.0.1"/>
+        </priority>
+      </trans>
+\end{lstlisting}
+
+Listing \ref{cpn_transition}は，トランジションに関する情報でありプレース同様にプレースとアークの関連付けに使用するためのユニークなIDが付与されている．また，text要素にはトランジションのラベルが指定されている．さらに，＜cond＞はトランジションの発火条件，＜priority＞は発火の優先順位，＜time＞トランジションの処理時間を記載する要素である．ただし，本研究では＜cond＞，＜priority＞，および＜time＞には設定を行っていない．
+
+\begin{lstlisting}[caption=アークのXMLファイル,label=cpn_arc]
+<arc id="ID1412324579"
+           orientation="PtoT"
+           order="1">
+        <posattr x="0.000000"
+                 y="0.000000"/>
+        <fillattr colour="White"
+                  pattern=""
+                  filled="false"/>
+        <lineattr colour="Black"
+                  thick="1"
+                  type="Solid"/>
+        <textattr colour="Black"
+                  bold="false"/>
+        <arrowattr headsize="1.200000"
+                   currentcyckle="2"/>
+        <transend idref="ID1412324537"/>
+        <placeend idref="ID1412324394"/>
+        <annot id="ID1422288249">
+          <posattr x="-211.000000"
+                   y="53.000000"/>
+          <fillattr colour="White"
+                    pattern="Solid"
+                    filled="false"/>
+          <lineattr colour="Black"
+                    thick="0"
+                    type="Solid"/>
+          <textattr colour="Black"
+                    bold="false"/>
+          <text tool="CPN Tools"
+                version="4.0.1">1`()</text>
+        </annot>
+      </arc>
+\end{lstlisting}
+
+Listing \ref{cpn_arc}は，アークに関する情報でありユニークなIDが付与されている．＜arc orientation＞では，アークの接続方向の指定がされている．PtoTはプレースからトランジション，TtoPはトランジションからプレースの接続を意味する．
+
+上記のXMLファイルから得られた情報を表にまとめる．
+
+\begin{table}[ht]
+    \centering
+    \caption{XMLファイルから取得した情報}
+    \begin{tabular}{>{$}c<{$} p{0.6\linewidth}}
+        \hline
+        \text{リスト} & \text{取得情報} \\
+        \hline
+        resource\_m  & マシンリソースのラベルとリソースの複数の性能 \\
+        machine\_processing\_time  & 単位時間あたりの処理時間 \\
+        machine\_cost & 単位時間あたりのコスト \\
+        job  & 各ジョブのタスクを順番に並べた構造\\
+        \hline
+    \end{tabular}
+    \label{variable}
+\end{table}
+
+\subsection{QUBO定式化}
+基本的なQUBO定式化の方式に基づいてMRFSSPのペトリネットモデルからの定式化を行う．これらの式で用いた変数を表にまとめる．
+
+\begin{table}[ht]
+    \centering
+    \caption{エネルギー関数内の変数}
+    \begin{tabular}{>{$}c<{$} p{0.6\linewidth}}
+        \hline
+        \text{変数} & \text{定義} \\
+        \hline
+        rc^r & 単位時間あたりのマシンリソース$r$の使用コスト \\
+        fd^r & マシンリソース$r$を使ってタスクを処理する場合の処理時間 \\
+        t_{i}^{j} & ジョブ$j$の$i$番目のタスク \\
+        x_{k}^{r}(t_{i}^{j}) & 時刻$k$において$t_{i}^{j}$がマシンリソース$r$を使用していれば$x_{k}^{r}(t_{i}^{j})=1$，そうでなければ$0$を示すバイナリ変数 \\
+        \hline
+    \end{tabular}
+    \label{variable}
+\end{table}
+
+ペトリネットの発火規則に従うためには，以下のエネルギー関数をゼロにする必要がある．すなわち，$E_{c1}$及び$E_{c2}$ともトランジションズの発火にはその入力プレース全てにトークンが配置されている必要があり，かつ，同じ入力プレースで同じトークンを前提に発火を行うことは禁止されているため，その競合状態にある場合には，一つのトランジションの発火のみに当該トークンが利用される必要がある．このようにペトリネットの発火規則から以下のエネルギー関数が生成できる．
+
+\begin{align} 
+E_{c1} &= \sum_{k_1,k_2} \sum_r \sum_{(j_1,j_2)} \sum_i x_{k_1}^{r}(t_{i}^{j_1}) \cdot x_{k_2}^{r}(t_{i}^{j_2}) \label{eqn:c1}\\ 
+E_{c2} &= \sum_{k_1,k_2} \sum_{r_1,r_2} \sum_j \sum_i x_{k_1}^{r_1}(t_{i}^{j}) \cdot x_{k_2}^{r_2}(t_{i+1}^{j}) \label{eqn:c2} 
+\end{align}
+
+一方，本スケジューリング問題は，全てのジョブが完了するまでタスクの実行計画を作成することであるので，全てのトランジションがただ一度ずつ発火する必要がある．これより，以下のエネルギー関数が生成できる．
+
+\begin{align} 
+E_{c3} &= \left( 1 - \sum_k \sum_r \sum_j \sum_i x_{k}^{r}(t_{i}^{j}) \right)^2 \label{eqn:c3} 
+\end{align}
+
+目的関数として，リソースの総コストの最小化とタスクの処理の待機時間の最小化となるため，ペトリネットの振る舞いモデルより以下のエネルギー関数が導かれる．
+
+\begin{align} 
+E_{o1} &= \sum_k \sum_r \sum_j \sum_i rc^r \cdot fd^r \cdot x_{k}^{r}(t_{i}^{j}) \label{eqn:o1}\\
+E_{o2} &= \sum_i \sum_{k_1,k_2} \sum_{r_1,r_2} \sum_j \sum_i \left( k_1 - fd^{r_2} \right) \cdot x_{k_2}^{r_2}(t_{i+1}^{j}) \cdot x_{k_1}^{r_1}(t_{i}^{j}) \label{eqn:o2} 
+\end{align}
+
+式(\ref{eqn:c1}), (\ref{eqn:c2}), (\ref{eqn:c3}), (\ref{eqn:o1}), (\ref{eqn:o2})に重み$A$, $B$, $C$, $D$, $E$を乗じてまとめた全体のエネルギー関数は以下のようになる．
+
+\begin{align} 
+E = &A \cdot E_{c1} + B \cdot E_{c2} + C \cdot E_{c3} \ + D \cdot E_{o1} + E \cdot E_{o2} 
+\end{align}
+
+\section{評価実験}
+ペトリネットモデルからQUBOモデルに定式化したエネルギー関数の最適化を行う．本実験では，OpenJijを用いて最適化計算を行う．
+
+制約条件 (\ref{eqn:c1}), (\ref{eqn:c2}), (\ref{eqn:c3})式に対する重みパラメータ A，B，C は，それぞれ 600，150，250 に固定されており，事前の調整に基づいて設定された．評価実験では，目的関数 (\ref{eqn:o1}), (\ref{eqn:o2})式 に対応する重みパラメータ D および E のみを変化させた。

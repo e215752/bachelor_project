@@ -1,0 +1,78 @@
+\documentclass[a4j,12pt]{jreport}
+\usepackage[dvipdfmx]{graphicx}
+\usepackage{listings,jvlisting}
+\usepackage{mythesis}
+\usepackage{multirow}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{array}
+\usepackage{here}
+\usepackage{enumitem}
+\setlength{\itemsep}{-1zh}
+
+\title{ペトリネットに基づく量子最適化の効率化\\
+Multi-objective traffic optimization using quantum annealing}
+\icon{
+		\includegraphics[width=80mm,bb=0 0 666 502]{fig/logo.gif.pdf}
+	}
+\year{令和6年度 卒業論文}
+\belongto{琉球大学工学部工学科\\
+知能情報コース}
+\author{215752H　上地 涼太  \\ 指導教員 {名嘉村 盛和} }
+%%
+%% プリアンブルに記述
+%% Figure 環境中で Table 環境の見出しを表示・カウンタの操作に必要
+%%
+\makeatletter
+\newcommand{\figcaption}[1]{\def\@captype{figure}\caption{#1}}
+\newcommand{\tblcaption}[1]{\def\@captype{table}\caption{#1}}
+\makeatother
+\setlength\abovecaptionskip{0pt}
+
+\begin{document}
+
+\maketitle
+\baselineskip 17pt plus 1pt minus 1pt
+
+
+\pagenumbering{roman}
+\setcounter{page}{0}
+
+\section*{要旨}
+%最後に書こうかな
+量子最適化
+\clearpage
+\section*{Abstract}
+yeah
+\listoffigures		% 図目次
+\listoftables		% 表目次
+
+%以下のように、章ごとに個別の tex ファイルを作成して、
+% main.tex をコンパイルして確認する。
+%章分けは個人で違うので下のフォーマットを参考にして下さい。
+
+% はじめに
+\input{chapter1.tex}
+
+% 基礎概念
+\input{chapter2.tex}
+
+% 実験
+\input{chapter3.tex}
+
+\input{chapter4.tex}
+%まとめと今後の課題
+\input{chapter5.tex}
+% 今後の課題
+%\input{future.tex}
+
+% 謝辞
+%\input{thanks.tex}
+
+% 参考文献
+\input{bibliography.tex}
+
+% 付録
+%\input{appendix.tex}
+
+\end{document}
