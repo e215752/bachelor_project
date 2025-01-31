@@ -1,4 +1,6 @@
 \relax 
+\citation{qaoa}
+\citation{quantum_annealing}
 \@writefile{toc}{\contentsline {chapter}{\numberline {第1章}序論}{1}{}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
@@ -6,6 +8,8 @@
 \@writefile{toc}{\contentsline {section}{\numberline {1.1}背景と目的}{1}{}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {1.2}論文の構成}{1}{}\protected@file@percent }
 \citation{murata}
+\citation{cpn}
+\citation{nouri}
 \@writefile{toc}{\contentsline {chapter}{\numberline {第2章}基礎概念}{2}{}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
@@ -16,7 +20,7 @@
 \@writefile{toc}{\contentsline {section}{\numberline {2.3}多資源フローショップスケジューリング問題}{2}{}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {2.4}ベイズ最適化}{3}{}\protected@file@percent }
 \citation{shinjo}
-\@writefile{toc}{\contentsline {chapter}{\numberline {第3章}関連研究}{4}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {第3章}ペトリネットに基づく変換前の多目的量子最適化}{4}{}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \newlabel{chap:poordirection}{{3}{4}}
@@ -42,20 +46,48 @@
 \newlabel{eqn:o1}{{3.4}{10}}
 \newlabel{eqn:o2}{{3.5}{10}}
 \@writefile{toc}{\contentsline {section}{\numberline {3.2}評価実験}{10}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {chapter}{\numberline {第4章}大規模な問題におけるペトリネット変換}{11}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {3.2}{\ignorespaces ペトリネット変換前のMRFSSPのパレート解}}{11}{}\protected@file@percent }
+\newlabel{fig:fig2}{{3.2}{11}}
+\@writefile{lot}{\contentsline {table}{\numberline {3.3}{\ignorespaces 各巡回における実行可能解と個数および平均値}}{11}{}\protected@file@percent }
+\newlabel{tab:before_feasible}{{3.3}{11}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.3}{\ignorespaces 5個のジョブに対するスケジュール}}{12}{}\protected@file@percent }
+\newlabel{fig:fig3}{{3.3}{12}}
+\@writefile{toc}{\contentsline {section}{\numberline {3.3}考察}{12}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {第4章}大規模な問題におけるペトリネット変換}{13}{}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{main_survey}{{4}{11}}
-\@writefile{toc}{\contentsline {section}{\numberline {4.1}効率よく解を探索するためのマシンリソース配置}{11}{}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {4.1}{\ignorespaces 変数削減のためのペトリネット変換}}{11}{}\protected@file@percent }
-\newlabel{fig:fig2}{{4.1}{11}}
-\newlabel{eqn:tran}{{4.1}{11}}
-\@writefile{toc}{\contentsline {section}{\numberline {4.2}評価実験}{12}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {chapter}{\numberline {第5章}結論}{13}{}\protected@file@percent }
+\newlabel{main_survey}{{4}{13}}
+\@writefile{toc}{\contentsline {section}{\numberline {4.1}効率よく解を探索するためのマシンリソース配置}{13}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {4.1}{\ignorespaces 変数削減のためのペトリネット変換}}{13}{}\protected@file@percent }
+\newlabel{fig:fig4}{{4.1}{13}}
+\newlabel{eqn:tran}{{4.1}{14}}
+\@writefile{toc}{\contentsline {section}{\numberline {4.2}評価実験}{14}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.1}タスク処理時間を最適化したペトリネットモデル変換(戦略1)}{14}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {4.2}{\ignorespaces タスクの処理時間を最適化したパレート解}}{14}{}\protected@file@percent }
+\newlabel{fig:fig5}{{4.2}{14}}
+\@writefile{lot}{\contentsline {table}{\numberline {4.1}{\ignorespaces 各巡回における実行可能解と個数および平均値(戦略1)}}{15}{}\protected@file@percent }
+\newlabel{tab:task_feasible}{{4.1}{15}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.2}リソースコストを最適化したペトリネットモデル変換(戦略2)}{15}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {4.3}{\ignorespaces リソースコストを最適化したパレート解}}{15}{}\protected@file@percent }
+\newlabel{fig:fig6}{{4.3}{15}}
+\@writefile{lot}{\contentsline {table}{\numberline {4.2}{\ignorespaces 各巡回における実行可能解と個数および平均値(戦略2)}}{16}{}\protected@file@percent }
+\newlabel{tab:cost_feasible}{{4.2}{16}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.3}ペトリネット変換前と戦略1の比較}{16}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {4.4}{\ignorespaces ペトリネット変換前と戦略1のパレート解}}{16}{}\protected@file@percent }
+\newlabel{fig:fig7}{{4.4}{16}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.4}ペトリネット変換前と戦略2の比較}{17}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {4.5}{\ignorespaces ペトリネット変換前と戦略2のパレート解}}{17}{}\protected@file@percent }
+\newlabel{fig:fig8}{{4.5}{17}}
+\@writefile{toc}{\contentsline {section}{\numberline {4.3}考察}{17}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {第5章}結論}{19}{}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\@writefile{toc}{\contentsline {section}{\numberline {5.1}まとめ}{13}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {5.2}今後の展望}{13}{}\protected@file@percent }
-\bibcite{murata}{1}
-\bibcite{shinjo}{2}
-\gdef \@abspage@last{19}
+\@writefile{toc}{\contentsline {section}{\numberline {5.1}まとめ}{19}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {5.2}今後の展望}{19}{}\protected@file@percent }
+\bibcite{qaoa}{1}
+\bibcite{quantum_annealing}{2}
+\bibcite{murata}{3}
+\bibcite{cpn}{4}
+\bibcite{nouri}{5}
+\bibcite{shinjo}{6}
+\gdef \@abspage@last{26}

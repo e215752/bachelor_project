@@ -2,6 +2,12 @@
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \contentsline {figure}{\numberline {3.1}{\ignorespaces フローショップシステムのペトリネットモデル}}{4}{}%
+\contentsline {figure}{\numberline {3.2}{\ignorespaces ペトリネット変換前のMRFSSPのパレート解}}{11}{}%
+\contentsline {figure}{\numberline {3.3}{\ignorespaces 5個のジョブに対するスケジュール}}{12}{}%
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {4.1}{\ignorespaces 変数削減のためのペトリネット変換}}{11}{}%
+\contentsline {figure}{\numberline {4.1}{\ignorespaces 変数削減のためのペトリネット変換}}{13}{}%
+\contentsline {figure}{\numberline {4.2}{\ignorespaces タスクの処理時間を最適化したパレート解}}{14}{}%
+\contentsline {figure}{\numberline {4.3}{\ignorespaces リソースコストを最適化したパレート解}}{15}{}%
+\contentsline {figure}{\numberline {4.4}{\ignorespaces ペトリネット変換前と戦略1のパレート解}}{16}{}%
+\contentsline {figure}{\numberline {4.5}{\ignorespaces ペトリネット変換前と戦略2のパレート解}}{17}{}%
 \addvspace {10\p@ }
