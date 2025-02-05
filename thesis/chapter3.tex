@@ -287,7 +287,7 @@ E = &A \cdot E_{c1} + B \cdot E_{c2} + C \cdot E_{c3} \ + D \cdot E_{o1} + E \cd
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\linewidth, height=8cm]{./images/parato.png}
+    \includegraphics[width=0.8\linewidth, height=8cm]{./images/parato_job5.png}
     \caption{ペトリネット変換前のMRFSSPのパレート解}
     \label{fig:fig2}
 \end{figure}
@@ -320,12 +320,48 @@ E = &A \cdot E_{c1} + B \cdot E_{c2} + C \cdot E_{c3} \ + D \cdot E_{o1} + E \cd
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\linewidth, height=8cm]{./images/gantt1.png}
+    \includegraphics[width=0.8\linewidth, height=8cm]{./images/gantt1_job5.png}
     \caption{5個のジョブに対するスケジュール}
     \label{fig:fig3}
 \end{figure}
 
 図\ref{fig:fig3}は，計算結果の一例をガントチャートに表したものである．本ガントチャートでは，色分けによりジョブごとのタスクが区別されており，ジョブ全体の進行状況が視覚的に把握できる．また，各ジョブ内でタスクの工程順序が正確に守られており，依存関係が反映されたスケジュールになっていることが確認できる．さらに，全てのタスクが適切なマシンに割り当てられ，未処理のタスクが存在しないためリソースの競合や制約違反が発生していないことがわかる．
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\linewidth, height=8cm]{./images/parato_job6.png}
+    \caption{計算できる最大規模数(job数が6)のパレート解}
+    \label{fig:fig4}
+\end{figure}
+\clearpage
+
+\begin{table}[ht]
+    \centering
+    \vspace{-0.3cm}
+    \caption{最大規模数の各巡回における実行可能解と個数および平均値}
+    \begin{tabular}{|c|c|c|c|}
+        \hline
+         巡回 & 個数 & Resource Costの平均値 & Waiting Timeの平均値 \\
+        \hline
+        第1巡 & 2 & 403 & 55.5 \\
+        \hline
+        第2巡 & 1 & 426 & 62 \\
+        \hline
+        第3巡 & 0 & - & - \\
+        \hline
+        第4巡 & 2 & 420 & 54 \\
+        \hline
+        第5巡 & 1 & 386 & 33 \\
+        \hline
+        全体の平均 & 1.5 & 408.8 & 51.1 \\
+        \hline
+    \end{tabular}
+    \label{tab:before_feasible_max}
+\end{table}
+
+表\ref{tab:before_feasible_max}と図\ref{fig:fig4}はペトリネット変換前のMRFSSPの計算できる最大規模(job数が6)の時の結果になっている．job数が5の時と比較してパレート解の個数が減少していることから効率的な解を見つけることが困難であることがわかる．また，規模の拡大に伴いそれぞれの目的関数の値の増加も見られる．
+
 \section{考察}
 現時点での結果として得られたパレートフロントの形状から，複数の目的関数がトレードオフの関係になっていることが明らかとなった．具体的には，Waiting Timeを短縮するとResource Costが増加し，逆にResource Costを抑制するとWaiting Timeが増加する傾向が確認される．この結果は，どの目的関数を優先するかによって選択される解が異なることを示しており，パレートフロント上の解を選択することで効率的かつ実用的な意思決定を行えると考えられる．実行可能解の個数が少ない原因としては，各パラメータの範囲に対する制限の厳しさが影響している可能性があると考えられる．また，探索回数を100回に限定しているため，解空間の十分な探索が行われず，実行可能解が少なくあった可能性も示唆される．この結果は，パラメータ範囲の設定や探索回数の増加が解空間の拡大および実行可能解の増加に寄与する可能性があると思われる．
+
+さらに，ジョブ数が5から6に増加した場合，Resource Costは約100，Waiting Timeは約3増加することが確認された．Resource Costの増加は，ジョブ数の増加に伴いリソースの割り当てが増加したことに起因すると考えられる．一方，Waiting Timeの増加は，リソースの競合が激化しタスク処理の待機時間が延びたためと推測される．ジョブ数の増加により探索空間が指数関数的に拡大し探索効率が低下することが課題として挙げられる．この課題を克服するためには，解の多様性を維持しつつ探索効率を向上させるアルゴリズムの導入が必要である．特に，大規模問題への適用においては探索空間を効率的に絞り込む手法などの調整が求められる．

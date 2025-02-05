@@ -10,10 +10,10 @@
     \centering
     \includegraphics[width=0.8\linewidth, height=7cm]{./images/transformation.png}
     \caption{変数削減のためのペトリネット変換}
-    \label{fig:fig4}
+    \label{fig:fig5}
 \end{figure}
 
-図\ref{fig:fig4}は対象問題のペトリネットモデルを変換した図になる．このモデル変換は以下の二段階のプロセスで構成される．
+図\ref{fig:fig5}は対象問題のペトリネットモデルを変換した図になる．このモデル変換は以下の二段階のプロセスで構成される．
 
 \begin{enumerate} 
 \item リソースの事前割り当てを適用することによりペトリネットモデルを変換する．ペトリネットモデルを変換するためのエネルギー関数が(\ref{eqn:tran})式である．
@@ -33,9 +33,9 @@ min \sum_{m \ne m_i}^M \left( \sum_t^T a_{m_i,t} \cdot x_{m_i,t} - \sum_t^T a_{m
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\linewidth, height=8cm]{./images/task.png}
+    \includegraphics[width=0.8\linewidth, height=8cm]{./images/task_job5.png}
     \caption{タスクの処理時間を最適化したパレート解}
-    \label{fig:fig5}
+    \label{fig:fig6}
 \end{figure}
 
 \begin{table}[ht]
@@ -62,21 +62,56 @@ min \sum_{m \ne m_i}^M \left( \sum_t^T a_{m_i,t} \cdot x_{m_i,t} - \sum_t^T a_{m
     \label{tab:task_feasible}
 \end{table}
 
-表\ref{tab:task_feasible}は表\ref{tab:before_feasible}と同様の目的で作成されたものであり，両者は同じ種類の結果を異なる条件下で示している．また，図\ref{fig:fig5}はタスク処理時間を最適化した後の最適化計算を行い，得られたパレート解を可視化したグラフになっている．第一段階の最適化において，タスクに使用するマシンリソースの分割を行い，多目的から単目的に変換されるためResource Costが確定される．この段階で分割されたリソースが固定され，第二段階の最適化ではResource Costが一定の値を保ったまま，Waiting Timeの短縮に向けた探索が行われるため解空間上で解が横方向に広がる結果が得られる．ただし，リソースの分割も含めて再計算を行うため全ての解が完全に同一のResource Costを持つわけではなく，一部の解においてResource Costの変動が見られる．
+表\ref{tab:task_feasible}は表\ref{tab:before_feasible}と同様の目的で作成されたものであり，両者は同じ種類の結果を異なる条件下で示している．また，図\ref{fig:fig6}はタスク処理時間を最適化した後の最適化計算を行い，得られたパレート解を可視化したグラフになっている．第一段階の最適化において，タスクに使用するマシンリソースの分割を行い，多目的から単目的に変換されるためResource Costが確定される．この段階で分割されたリソースが固定され，第二段階の最適化ではResource Costが一定の値を保ったまま，Waiting Timeの短縮に向けた探索が行われるため解空間上で解が横方向に広がる結果が得られる．ただし，リソースの分割も含めて再計算を行うため全ての解が完全に同一のResource Costを持つわけではなく，一部の解においてResource Costの変動が見られる．
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\linewidth, height=8cm]{./images/task_job7.png}
+    \caption{戦略1の計算できる最大規模数(job数が7)のパレート解}
+    \label{fig:fig7}
+\end{figure}
+\clearpage
+
+\begin{table}[ht]
+    \centering
+    \vspace{-0.3cm}
+    \caption{戦略1の最大規模数の実行可能解と個数および平均値}
+    \begin{tabular}{|c|c|c|c|}
+        \hline
+         巡回 & 個数 & Resource Costの平均値 & Waiting Timeの平均値 \\
+        \hline
+        第1巡 & 3 & 427 & 33 \\
+        \hline
+        第2巡 & 4 & 427 & 39.8 \\
+        \hline
+        第3巡 & 8 & 427 & 44 \\
+        \hline
+        第4巡 & 4 & 427 & 50 \\
+        \hline
+        第5巡 & 4 & 427 & 38.5 \\
+        \hline
+        全体の平均 & 4.6 & 427 & 41.1 \\
+        \hline
+    \end{tabular}
+    \label{tab:task_feasible_max}
+\end{table}
+
+表\ref{tab:task_feasible_max}と図\ref{fig:fig7}は戦略1の計算できる最大規模数(job数が7)の時の結果になっている．job数が5の時と比較して実行可能解が増加している結果は，提案手法が拡大した探索空間を効率的に探索していることを示唆している．モデルの変換前と同様に規模の拡大に伴い目的関数の値の増加が見られる．
  
 \subsection{リソースコストを最適化したペトリネットモデル変換(戦略2)}
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\linewidth, height=8cm]{./images/cost.png}
+    \includegraphics[width=0.8\linewidth, height=8cm]{./images/cost_job5.png}
     \caption{リソースコストを最適化したパレート解}
-    \label{fig:fig6}
+    \label{fig:fig8}
 \end{figure}
+\clearpage
 
 \begin{table}[ht]
     \centering
     \vspace{-0.3cm}
-    \caption{各巡回における実行可能解と個数および平均値(戦略2)}
+    \caption{各巡回における実行可能解と個数および平均値}
     \begin{tabular}{|c|c|c|c|}
         \hline
          巡回 & 個数 & Resource Costの平均値 & Waiting Timeの平均値 \\
@@ -97,31 +132,65 @@ min \sum_{m \ne m_i}^M \left( \sum_t^T a_{m_i,t} \cdot x_{m_i,t} - \sum_t^T a_{m
     \label{tab:cost_feasible}
 \end{table}
 
-表\ref{tab:cost_feasible}は表\ref{tab:task_feasible}と同様の条件下で行なった実験結果を示している．また，図\ref{fig:fig6}はリソースコストの最適化を初段階として行い，解の分布が戦略1で得られた分布と類似していることがわかる．
+表\ref{tab:cost_feasible}は表\ref{tab:task_feasible}と同様の条件下で行なった実験結果を示している．また，図\ref{fig:fig8}はリソースコストの最適化を初段階として行い，解の分布が戦略1で得られた分布と類似していることがわかる．
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\linewidth, height=8cm]{./images/cost_job7.png}
+    \caption{戦略2の計算できる最大規模数(job数が7)のパレート解}
+    \label{fig:fig8}
+\end{figure}
+
+\begin{table}[ht]
+    \centering
+    \vspace{-0.3cm}
+    \caption{戦略2の最大規模数の実行可能解と個数および平均値}
+    \begin{tabular}{|c|c|c|c|}
+        \hline
+         巡回 & 個数 & Resource Costの平均値 & Waiting Timeの平均値 \\
+        \hline
+        第1巡 & 0 & - & - \\
+        \hline
+        第2巡 & 0 & - & - \\
+        \hline
+        第3巡 & 0 & - & - \\
+        \hline
+        第4巡 & 0 & - & - \\
+        \hline
+        第5巡 & 2 & 436 & 39 \\
+        \hline
+        全体の平均 & 2 & 436 & 39 \\
+        \hline
+    \end{tabular}
+    \label{tab:cost_feasible_max}
+\end{table}
+
+表\ref{tab:cost_feasible_max}と図\ref{fig:fig8}は戦略2の計算できる最大規模数(job数が7)の時の結果になっている．job数が5の時と
+比較すると実行可能解が減少しているが，戦略1同様規模を拡大しても解を探索することができることより効率的に探索していることを示唆している．
 
 \subsection{ペトリネット変換前と戦略1の比較}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\linewidth, height=8cm]{./images/task_and_before.png}
+    \includegraphics[width=0.8\linewidth, height=8cm]{./images/task_and_before_job5.png}
     \caption{ペトリネット変換前と戦略1のパレート解}
-    \label{fig:fig7}
+    \label{fig:fig9}
 \end{figure}
 
-図\ref{fig:fig7}は，ペトリネット変換前と戦略1に基づく最適化計算の結果を同時にプロットしたものである．青の点が戦略1で緑の点が変換前である．この図に示された3つのパレート解のうち，1つは戦略1により得られた解であり，残りの2つはペトリネット変換前における解である．このことから，戦略1においても効率的な解を見つけることが可能であることが示された．また，表\ref{tab:before_feasible}と表\ref{tab:task_feasible}を比較すると，戦略1ではResource Costの値が比較的安定している一方で，ペトリネット変換前の結果と比較すると若干劣る傾向が見られる．しかしながら，Waiting Timeに関しては，戦略1の結果において変換前の結果と比較して明らかに減少している傾向が確認された．これらの結果は，戦略1がWaiting Timeの最適化に寄与しつつ，Resource Costの安定性を維持できる手法であることを示唆している．
+図\ref{fig:fig9}は，ペトリネット変換前と戦略1に基づく最適化計算の結果を同時にプロットしたものである．青の点が戦略1で緑の点が変換前である．この図に示された3つのパレート解のうち，1つは戦略1により得られた解であり，残りの2つはペトリネット変換前における解である．このことから，戦略1においても効率的な解を見つけることが可能であることが示された．また，表\ref{tab:before_feasible}と表\ref{tab:task_feasible}を比較すると，戦略1ではResource Costの値が比較的安定している一方で，ペトリネット変換前の結果と比較すると若干劣る傾向が見られる．しかしながら，Waiting Timeに関しては，戦略1の結果において変換前の結果と比較して明らかに減少している傾向が確認された．これらの結果は，戦略1がWaiting Timeの最適化に寄与しつつ，Resource Costの安定性を維持できる手法であることを示唆している．
 
 \subsection{ペトリネット変換前と戦略2の比較}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\linewidth, height=8cm]{./images/cost_and_before.png}
+    \includegraphics[width=0.8\linewidth, height=8cm]{./images/cost_and_before_job5.png}
     \caption{ペトリネット変換前と戦略2のパレート解}
-    \label{fig:fig8}
+    \label{fig:fig10}
 \end{figure}
 
-図\ref{fig:fig8}は，ペトリネット変換前と戦略1に基づく最適化計算の結果を同時にプロットしたものである．戦略1と同様な結果が得られた．このことから，戦略2においても効率的な解を見つけることが可能であることが示された．また，表\ref{tab:before_feasible}と表\ref{tab:cost_feasible}を比較すると，戦略2はWaiting Timeの短縮において顕著な効果を示していることが明らかとなった．一方で，Resource Costが増加し，実行可能解の個数が減少している点は，課題として考慮する必要がある．
+図\ref{fig:fig10}は，ペトリネット変換前と戦略1に基づく最適化計算の結果を同時にプロットしたものである．戦略1と同様な結果が得られた．このことから，戦略2においても効率的な解を見つけることが可能であることが示された．また，表\ref{tab:before_feasible}と表\ref{tab:cost_feasible}を比較すると，戦略2はWaiting Timeの短縮において顕著な効果を示していることが明らかとなった．一方で，Resource Costが増加し，実行可能解の個数が減少している点は，課題として考慮する必要がある．
 
 \section{考察}
-変換後の戦略1および戦略2において観察された実行可能解の減少は，モデル変換によって導入された付加的な制約条件に起因するものと考えられる．この実行可能解の減少が一見すると解の多様性の損失として捉えられる可能性があるが，むしろ質的な観点からは有意義な減少である可能性があると示唆される．
+変換後の戦略1および戦略2において観察された実行可能解の減少は，モデル変換によって導入された付加的な制約条件に起因するものと考えられる．この実行可能解の減少が一見すると解の多様性の損失として捉えられる可能性があるが，むしろ質的な観点からは有意義な減少である可能性があると示唆される．具体的には，戦略1および戦略2の適用により，システムにおけるWaiting Timeが統計的に有意な減少を示したことが確認されている．このことから，スケジューリング戦略が制約条件を厳格化することで低品質な解を排除し，より効率的で質の高い解を優先するように探索空間を調整したことを示唆している．一方で，実行可能解の減少に伴う探索空間の縮小がResource Costの増加と関連している可能性も考えられる．制約条件の厳格化により，低コストな解が探索区間から排除された結果Resource Costが増加したと推測される．
 
-具体的には，戦略1および戦略2の適用により，システムにおけるWaiting Timeが統計的に有意な減少を示したことが確認されている．このことから，スケジューリング戦略が制約条件を厳格化することで低品質な解を排除し，より効率的で質の高い解を優先するように探索空間を調整したことを示唆している．一方で，実行可能解の減少に伴う探索空間の縮小がResource Costの増加と関連している可能性も考えられる．制約条件の厳格化により，低コストな解が探索区間から排除された結果Resource Costが増加したと推測される．
+さらに，本研究ではモデル変換を適用することで問題の規模が大きくなった場合でも計算を実行可能であることが示された．この結果は，変数数の削減や探索効率の向上を通じてモデル変換がスケーラビリティの向上に寄与していることを示唆していると思われる．また，モデル変換後においてリソースコストを優先した場合よりもタスクの処理時間を優先した場合の方が実行可能解の個数が多かった理由として，マシンリソースの性能とコストのばらつきが影響していると考えられる．具体的には，タスクの処理時間を優先する場合，性能の高いマシンが優先的に活用されることでスケジュールが柔軟に調整され多くの実行可能解が得られたと推測される．一方で，リソースコストを優先する場合，探索空間に厳格な制約が課されその結果，より効率的なスケジューリングが可能な良質な解が排除されてしまい実行可能解の個数が減少したと考えられる。
 
 また，本研究で提案された戦略1および戦略2は，特にWaiting Timeの最小化が重要視される運用システムにおいて有力なスケジューリング戦略となり得る．このことは，システムの要求事項や運用目的に応じた柔軟で適応的なアプローチの重要性を強調している．一方で，Resource Costの増加が一定の課題として残るため，より広い解空間を確保する探索手法の導入や，制約条件の緩和を検討する余地がある．
