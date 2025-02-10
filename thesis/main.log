@@ -1,4 +1,4 @@
-This is e-pTeX, Version 3.141592653-p4.0.0-220214-2.6 (utf8.euc) (TeX Live 2022) (preloaded format=platex 2022.4.15)  31 JAN 2025 18:25
+This is e-pTeX, Version 3.141592653-p4.0.0-220214-2.6 (utf8.euc) (TeX Live 2022) (preloaded format=platex 2022.4.15)  10 FEB 2025 17:04
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -55,6 +55,10 @@ File: dvipdfmx.def 2021/03/18 v5.0j Graphics/color driver for dvipdfmx
 ))
 \Gin@req@height=\dimen157
 \Gin@req@width=\dimen158
+)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/url/url.sty
+\Urlmuskip=\muskip16
+Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
 )
 (/usr/local/texlive/2022/texmf-dist/tex/latex/listings/listings.sty
 \lst@mode=\count195
@@ -149,7 +153,7 @@ LaTeX Font Info:    Redeclaring font encoding OML on input line 743.
 LaTeX Font Info:    Redeclaring font encoding OMS on input line 744.
 \macc@depth=\count280
 \c@MaxMatrixCols=\count281
-\dotsspace@=\muskip16
+\dotsspace@=\muskip17
 \c@parentequation=\count282
 \dspbrk@lvl=\count283
 \tag@help=\toks21
@@ -212,65 +216,78 @@ File: l3backend-dvips.def 2022-02-07 L3 backend support: dvips
 
 LaTeX Warning: Label `variable' multiply defined.
 
+
+LaTeX Warning: Label `fig:fig8' multiply defined.
+
 )
 \openout1 = `main.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 32.
-LaTeX Font Info:    ... okay on input line 32.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 32.
-LaTeX Font Info:    ... okay on input line 32.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 32.
-LaTeX Font Info:    ... okay on input line 32.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 32.
-LaTeX Font Info:    ... okay on input line 32.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 32.
-LaTeX Font Info:    ... okay on input line 32.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 32.
-LaTeX Font Info:    ... okay on input line 32.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 32.
-LaTeX Font Info:    ... okay on input line 32.
-LaTeX Font Info:    Checking defaults for JY1/mc/m/n on input line 32.
-LaTeX Font Info:    ... okay on input line 32.
-LaTeX Font Info:    Checking defaults for JT1/mc/m/n on input line 32.
-LaTeX Font Info:    ... okay on input line 32.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 33.
+LaTeX Font Info:    ... okay on input line 33.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 33.
+LaTeX Font Info:    ... okay on input line 33.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 33.
+LaTeX Font Info:    ... okay on input line 33.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 33.
+LaTeX Font Info:    ... okay on input line 33.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 33.
+LaTeX Font Info:    ... okay on input line 33.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 33.
+LaTeX Font Info:    ... okay on input line 33.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 33.
+LaTeX Font Info:    ... okay on input line 33.
+LaTeX Font Info:    Checking defaults for JY1/mc/m/n on input line 33.
+LaTeX Font Info:    ... okay on input line 33.
+LaTeX Font Info:    Checking defaults for JT1/mc/m/n on input line 33.
+LaTeX Font Info:    ... okay on input line 33.
 \c@lstlisting=\count294
 File: fig/logo.gif.pdf Graphic file (type pdf)
 <fig/logo.gif.pdf>
 LaTeX Font Info:    Font shape `JT1/mc/bx/n' in size <17.28> not available
-(Font)              Font shape `JT1/gt/m/n' tried instead on input line 41.
+(Font)              Font shape `JT1/gt/m/n' tried instead on input line 42.
 LaTeX Font Info:    Font shape `JY1/mc/bx/n' in size <17.28> not available
-(Font)              Font shape `JY1/gt/m/n' tried instead on input line 41.
+(Font)              Font shape `JY1/gt/m/n' tried instead on input line 42.
  [0
 
 ] [1] [2
 
 ]
 LaTeX Font Info:    Font shape `JT1/mc/bx/n' in size <24.88> not available
-(Font)              Font shape `JT1/gt/m/n' tried instead on input line 58.
+(Font)              Font shape `JT1/gt/m/n' tried instead on input line 61.
 LaTeX Font Info:    Font shape `JY1/mc/bx/n' in size <24.88> not available
-(Font)              Font shape `JY1/gt/m/n' tried instead on input line 58.
- (./main.lof
-LaTeX Font Info:    Trying to load font information for U+msa on input line 4.
+(Font)              Font shape `JY1/gt/m/n' tried instead on input line 61.
+ (./main.toc
+LaTeX Font Info:    Font shape `JT1/mc/bx/n' in size <12> not available
+(Font)              Font shape `JT1/gt/m/n' tried instead on input line 1.
+LaTeX Font Info:    Font shape `JY1/mc/bx/n' in size <12> not available
+(Font)              Font shape `JY1/gt/m/n' tried instead on input line 1.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 2.
 
 (/usr/local/texlive/2022/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 4.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 2.
 
 (/usr/local/texlive/2022/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 ))
-\tf@lof=\write3
-\openout3 = `main.lof'.
+\tf@toc=\write3
+\openout3 = `main.toc'.
 
- [3
+ [1
 
 ]
-(./main.lot)
-\tf@lot=\write4
-\openout4 = `main.lot'.
+(./main.lof)
+\tf@lof=\write4
+\openout4 = `main.lof'.
 
- (./chapter1.tex [4
+ [2
+
+] (./main.lot)
+\tf@lot=\write5
+\openout5 = `main.lot'.
+
+ (./chapter1.tex [3
 
 ]
 第 1 章
@@ -290,34 +307,58 @@ File: ./images/fsp.png Graphic file (type bmp)
 <./images/fsp.png>
 [4
 
-] [5] [6] [7] [8] [9]
-File: ./images/parato.png Graphic file (type bmp)
-<./images/parato.png>
+] [5] [6] [7] [8]
+LaTeX Font Info:    Kanji font shape `JY1/mc/m/it' undefined
+(Font)              No change on input line 222.
+LaTeX Font Info:    Kanji font shape `JY1/mc/m/it' undefined
+(Font)              No change on input line 223.
+LaTeX Font Info:    Kanji font shape `JY1/mc/m/it' undefined
+(Font)              No change on input line 224.
+LaTeX Font Info:    Kanji font shape `JY1/mc/m/it' undefined
+(Font)              No change on input line 225.
+ [9]
+File: ./images/parato_job5.png Graphic file (type bmp)
+<./images/parato_job5.png>
  [10]
-File: ./images/gantt1.png Graphic file (type bmp)
-<./images/gantt1.png>
- [11]) (./chapter4.tex [12]
+File: ./images/gantt1_job5.png Graphic file (type bmp)
+<./images/gantt1_job5.png>
+ [11]
+File: ./images/parato_job6.png Graphic file (type bmp)
+<./images/parato_job6.png>
+ [12]) (./chapter4.tex [13
+
+]
 第 4 章
 File: ./images/transformation.png Graphic file (type bmp)
 <./images/transformation.png>
-[13
+[14
 
 ]
-File: ./images/task.png Graphic file (type bmp)
-<./images/task.png>
- [14]
-File: ./images/cost.png Graphic file (type bmp)
-<./images/cost.png>
-File: ./images/task_and_before.png Graphic file (type bmp)
-<./images/task_and_before.png>
+File: ./images/task_job5.png Graphic file (type bmp)
+<./images/task_job5.png>
  [15]
-File: ./images/cost_and_before.png Graphic file (type bmp)
-<./images/cost_and_before.png>
- [16]) (./chapter5.tex [17] [18]
-第 5 章
-) (./thanks.tex [19
+File: ./images/task_job7.png Graphic file (type bmp)
+<./images/task_job7.png>
+ [16] [17]
+File: ./images/cost_job5.png Graphic file (type bmp)
+<./images/cost_job5.png>
+ [18
 
-]) (./bibliography.tex [20
+]
+File: ./images/cost_job7.png Graphic file (type bmp)
+<./images/cost_job7.png>
+File: ./images/task_and_before_job5.png Graphic file (type bmp)
+<./images/task_and_before_job5.png>
+ [19
+
+]
+File: ./images/cost_and_before_job5.png Graphic file (type bmp)
+<./images/cost_and_before_job5.png>
+ [20] [21]) (./chapter5.tex [22]
+第 5 章
+) (./thanks.tex [23
+
+]) (./bibliography.tex [24
 
 ]
 LaTeX Font Info:    Kanji font shape `JY1/mc/m/it' undefined
@@ -330,7 +371,9 @@ LaTeX Font Info:    Kanji font shape `JY1/mc/m/it' undefined
 (Font)              No change on input line 14.
 LaTeX Font Info:    Kanji font shape `JY1/mc/m/it' undefined
 (Font)              No change on input line 15.
-) [21
+LaTeX Font Info:    Kanji font shape `JY1/mc/m/it' undefined
+(Font)              No change on input line 17.
+) [25
 
 ] (./main.aux)
 
@@ -338,12 +381,12 @@ LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 4627 strings out of 478724
- 67685 string characters out of 5858392
- 487304 words of memory out of 5000000
- 22996 multiletter control sequences out of 15000+600000
- 484443 words of font info for 90 fonts, out of 8000000 for 9000
+ 4748 strings out of 478724
+ 69749 string characters out of 5858392
+ 488475 words of memory out of 5000000
+ 23107 multiletter control sequences out of 15000+600000
+ 484750 words of font info for 91 fonts, out of 8000000 for 9000
  929 hyphenation exceptions out of 8191
- 55i,13n,62p,820b,1725s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 55i,12n,62p,1136b,1725s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on main.dvi (26 pages, 68732 bytes).
+Output written on main.dvi (31 pages, 92120 bytes).

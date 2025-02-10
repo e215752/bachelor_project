@@ -4,7 +4,10 @@
 \contentsline {table}{\numberline {3.1}{\ignorespaces XMLファイルから取得した情報}}{9}{}%
 \contentsline {table}{\numberline {3.2}{\ignorespaces エネルギー関数内の変数}}{9}{}%
 \contentsline {table}{\numberline {3.3}{\ignorespaces 各巡回における実行可能解と個数および平均値}}{11}{}%
+\contentsline {table}{\numberline {3.4}{\ignorespaces 最大規模数の各巡回における実行可能解と個数および平均値}}{13}{}%
 \addvspace {10\p@ }
-\contentsline {table}{\numberline {4.1}{\ignorespaces 各巡回における実行可能解と個数および平均値(戦略1)}}{15}{}%
-\contentsline {table}{\numberline {4.2}{\ignorespaces 各巡回における実行可能解と個数および平均値(戦略2)}}{16}{}%
+\contentsline {table}{\numberline {4.1}{\ignorespaces 各巡回における実行可能解と個数および平均値(戦略1)}}{16}{}%
+\contentsline {table}{\numberline {4.2}{\ignorespaces 戦略1の最大規模数の実行可能解と個数および平均値}}{18}{}%
+\contentsline {table}{\numberline {4.3}{\ignorespaces 各巡回における実行可能解と個数および平均値}}{19}{}%
+\contentsline {table}{\numberline {4.4}{\ignorespaces 戦略2の最大規模数の実行可能解と個数および平均値}}{19}{}%
 \addvspace {10\p@ }

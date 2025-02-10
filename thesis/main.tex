@@ -1,5 +1,6 @@
 \documentclass[a4j,12pt]{jreport}
 \usepackage[dvipdfmx]{graphicx}
+\usepackage{url}
 \usepackage{listings,jvlisting}
 \usepackage{mythesis}
 \usepackage{multirow}
@@ -39,22 +40,25 @@ Efficient quantum optimization based on Petri nets}
 \setcounter{page}{0}
 
 \section*{要旨}
-%最後に書こうかな
-近年，量子最適化技術が最適化問題の解決手段として注目を集めている．特に，量子アニーリングや量子近似最適化アルゴリズム (QAOA) は、組合せ最適化問題に適用される手法として研究が進められている．しかし，QUBO  や Ising モデルへの定式化が困難であり，大規模かつ複雑な制約を持つ問題に対して高品質な解を得るための手法が求められている．
+近年，量子最適化技術が最適化問題の解決手段として注目を集めている．特に，量子アニーリングや量子近似最適化アルゴリズム (QAOA) は、組合せ最適化問題に適用される手法として研究が進められている．しかし，QUBO  や Ising モデルへの定式化が困難であり，大規模かつ複雑な制約を持つ問題に対して高品質な解を得るための定式化手法が求められている．
 
-本研究では，ペトリネットを用いた量子最適化の効率化を目的とし，ペトリネットによる問題の構造化およびQUBOモデルに定式化し多様な解を得る．具体的には，多資源フローショップスケジューリング問題 (MRFSSP) を対象とし，ペトリネットモデルを活用することで，スケジューリング問題のQUBOモデルへの変換を容易にし量子アニーリングを用いた最適化の精度を向上させる．
+本研究では，ペトリネットを用いた量子最適化の効率化を目的とし，ペトリネットモデリングに基づく問題の定式化手法を開発する．具体的には，多資源フローショップスケジューリング問題 (MRFSSP) を対象とし，ペトリネットモデルを活用することで，スケジューリング問題のQUBOモデルへの変換を容易にする．
 
-また，モデル変換による変数削減手法を導入し計算の効率化を図る．問題に対して最適化計算を二段階に分けてペトリネットモデルの変換を行い変数の削減をする．モデル変換の前後の比較実験により，待機時間の縮小を目的とした最適解の探索が可能であることを示し，より効果的なスケジューリングが可能であることを確認した．
+また，モデル変換による変数削減手法を提案する．これは二段階最適化に基づくもので最初に与えられた組合せ最適化問題に対してモデル化したペトリネットモデルを一段目の最適化計算でネットモデル変換を行う．変換後のペトリネットから生成されるQUBOモデルは変数の数が削減される．モデル変換の前後の比較実験により，待機時間の縮小を目的とした最適解の探索が可能であることを示し，より効果的なスケジューリングが可能であることを確認した．
 
 本研究の結果は，大規模な組合せ最適化問題における量子計算の実用化に向けた一歩となるものであり，今後の展望としては，リバース量子アニーリングの導入や多目的最適化を維持したモデル変換による高品質な解の探索の改善，有効性を確認したい．
 
 \clearpage
 \section*{Abstract}
-In recent years, quantum optimization techniques have attracted much attention as a means of solving optimization problems. In particular, quantum annealing and quantum approximate optimization algorithms (QAOA) have been studied as methods applied to combinatorial optimization problems. However, the formulation into QUBO and Ising models is difficult, and methods for obtaining high-quality solutions to problems with large and complex constraints are needed.
+In recent years, quantum optimization techniques have attracted much attention as a means of solving optimization problems. In particular, quantum annealing and quantum approximate optimization algorithms (QAOA) have been studied as methods applied to combinatorial optimization problems. However, their formulation into QUBO and Ising models is difficult, and there is a need for formulation methods to obtain high-quality solutions for problems with large and complex constraints.
 
-In addition, a variable reduction method by model transformation is introduced to improve the efficiency of the calculation. The Petri net model is transformed to reduce variables by dividing the optimization calculation into two stages. Comparison experiments before and after the model transformation showed that it is possible to search for the optimal solution to reduce the waiting time, and confirmed that more effective scheduling is possible.
+This study aims to improve the efficiency of quantum optimization using Petri nets, and to develop a formulation method for the problem based on Petri net modeling. Specifically, we focus on the multi-resource flow store scheduling problem (MRFSSP) and utilize the Petri net model to facilitate the conversion of the scheduling problem to the QUBO model.
 
-The results of this study are a step toward the practical application of quantum computation in large-scale combinatorial optimization problems, and future prospects include the introduction of reverse quantum annealing and the improvement and validity of the search for high-quality solutions by model transformation while maintaining multi-objective optimization.
+We also propose a method of variable reduction through model transformation. This is based on two-stage optimization, in which a Petri net model modeled for a given combinatorial optimization problem is transformed into a net model in the first stage of optimization computation. The QUBO model generated from the transformed Petri net reduces the number of variables. Comparison experiments before and after the model transformation show that it is possible to find the optimal solution for the purpose of reducing the waiting time, and that more effective scheduling is possible.
+
+The results of this study are a step toward the practical application of quantum computation in large-scale combinatorial optimization problems. Future prospects include the introduction of reverse quantum annealing and the improvement and effectiveness of searching for high-quality solutions by model transformation while maintaining multi-objective optimization.
+
+\tableofcontents        %目次
 \listoffigures		% 図目次
 \listoftables		% 表目次
 

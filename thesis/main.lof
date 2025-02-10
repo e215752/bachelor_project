@@ -4,10 +4,13 @@
 \contentsline {figure}{\numberline {3.1}{\ignorespaces フローショップシステムのペトリネットモデル}}{4}{}%
 \contentsline {figure}{\numberline {3.2}{\ignorespaces ペトリネット変換前のMRFSSPのパレート解}}{11}{}%
 \contentsline {figure}{\numberline {3.3}{\ignorespaces 5個のジョブに対するスケジュール}}{12}{}%
+\contentsline {figure}{\numberline {3.4}{\ignorespaces 計算できる最大規模数(job数が6)のパレート解}}{12}{}%
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {4.1}{\ignorespaces 変数削減のためのペトリネット変換}}{13}{}%
-\contentsline {figure}{\numberline {4.2}{\ignorespaces タスクの処理時間を最適化したパレート解}}{14}{}%
-\contentsline {figure}{\numberline {4.3}{\ignorespaces リソースコストを最適化したパレート解}}{15}{}%
-\contentsline {figure}{\numberline {4.4}{\ignorespaces ペトリネット変換前と戦略1のパレート解}}{16}{}%
-\contentsline {figure}{\numberline {4.5}{\ignorespaces ペトリネット変換前と戦略2のパレート解}}{17}{}%
+\contentsline {figure}{\numberline {4.1}{\ignorespaces 変数削減のためのペトリネット変換}}{14}{}%
+\contentsline {figure}{\numberline {4.2}{\ignorespaces タスクの処理時間を最適化したパレート解}}{16}{}%
+\contentsline {figure}{\numberline {4.3}{\ignorespaces 戦略1の計算できる最大規模数(job数が7)のパレート解}}{17}{}%
+\contentsline {figure}{\numberline {4.4}{\ignorespaces リソースコストを最適化したパレート解}}{18}{}%
+\contentsline {figure}{\numberline {4.5}{\ignorespaces 戦略2の計算できる最大規模数(job数が7)のパレート解}}{19}{}%
+\contentsline {figure}{\numberline {4.6}{\ignorespaces ペトリネット変換前と戦略1のパレート解}}{20}{}%
+\contentsline {figure}{\numberline {4.7}{\ignorespaces ペトリネット変換前と戦略2のパレート解}}{21}{}%
 \addvspace {10\p@ }
