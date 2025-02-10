@@ -10,15 +10,21 @@
 │  ├ FlowShop_ver1.ipynb
 │  └ search .. データ取得したやつを日付毎にまとめてる
 │    ├ exp.md ハイパーパラメータのパターンの詳細
-│    ├ t_12 .. time=12としたときのデータ
-│    ├ t_30 .. time=30としたときのデータ
+│    ├ job5 .. jobが5つの時のデータ
+│    ├ job6 .. jobが6つの時のデータ
 │    └ plots .. plotした図
 │
-└  FlowShop_ver2 .. モデルの分割後のコード
+└ FlowShop_ver2 .. モデルの分割後のコード
    ├ FSP.cpn .. cpntoolsでモデル表現したファイル
    ├ FSP.xml .. cpntoolsでモデル表現したxmlファイル
+   ├ xml.ipynb .. xmlファイルから必要なデータを取得するコード
    ├ FlowShop_ver2.ipynb
    └ search .. データ取得したやつを日付毎にまとめてる
+     ├ exp.md ハイパーパラメータのパターンの詳細
+     ├ job5 .. jobが5つの時のデータ
+     ├ job6 .. jobが6つの時のデータ
+     ├ job7 .. jobが7つの時のデータ
+     └ plots .. plotした図
 
 ```
 
