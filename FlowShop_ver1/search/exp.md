@@ -1,10 +1,29 @@
 - スケジューリング問題の実験結果
-   - job15のみそれぞれのパターンごとに目的関数のエネルギーの値をt_30に保存してある
-   - patt1~6:feed_dict = {"A": 600.0, "B": 150, "C": 250.0, "D": 1, "E": 1} E = {1,10,20,30,40,50}の計6パターン
-   - patt7~12:feed_dict = {"A": 600.0, "B": 150, "C": 250.0, "D": 5, "E": 1}
-   - patt13~18:feed_dict = {"A": 600.0, "B": 150, "C": 250.0, "D": 8, "E": 1}
-   - patt19~24:feed_dict = {"A": 600.0, "B": 150, "C": 250.0, "D": 10, "E": 1}
-   - patt25~30:feed_dict = {"A": 600.0, "B": 150, "C": 250.0, "D": 13, "E": 1}
+   - job5のとき
+      A = trial.suggest_float("A", 1000, 2000)
+      B = trial.suggest_float("B", 180, 220)
+      C = trial.suggest_float("C", 250, 350)
+      D = trial.suggest_float("D", 1, 10)
+      E = trial.suggest_float("E", 1, 10)
 
-- 量子ビットの数 ("R0":2個,"R1":2個,"R2":2個)
-       job=15 2190
+      param_initial_values = {
+         "A": 1500,
+         "B": 200,
+         "C": 300,
+         "D": 1,
+         "E": 1
+      }
+   - job6のとき
+      A = trial.suggest_float("A", 1000, 2000)
+      B = trial.suggest_float("B", 180, 220)
+      C = trial.suggest_float("C", 250, 350)
+      D = trial.suggest_float("D", 1, 10)
+      E = trial.suggest_float("E", 1, 10)
+
+      param_initial_values = {
+         "A": 1008.83,
+         "B": 180.95,
+         "C": 331.45,
+         "D": 4.94,
+         "E": 1.04
+      }
